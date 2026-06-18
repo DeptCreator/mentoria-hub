@@ -45,7 +45,7 @@ export default function AuthModal({ isOpen, onClose, mode = 'login' }: { isOpen:
       style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}
       onClick={onClose}
     >
-      <div className="w-full max-w-[420px] glass glass-xl p-8 mx-4 animate-fadeIn"
+      <div className="relative w-full max-w-[420px] glass glass-xl p-5 sm:p-8 mx-4 animate-fadeIn"
         onClick={e => e.stopPropagation()}
       >
         {/* Close button */}
@@ -64,10 +64,10 @@ export default function AuthModal({ isOpen, onClose, mode = 'login' }: { isOpen:
           >
             <span className="text-[20px]">🔐</span>
           </div>
-          <h2 className="font-display text-[1.75rem] font-bold" style={{ color: 'var(--fg)' }}>
+          <h2 className="font-display text-[1.5rem] sm:text-[1.75rem] font-bold" style={{ color: 'var(--fg)' }}>
             {authMode === 'login' ? 'Welcome Back' : 'Join Mentoria'}
           </h2>
-          <p className="text-[14px] mt-1" style={{ color: 'var(--fg-dim)' }}>
+          <p className="text-[13px] sm:text-[14px] mt-1" style={{ color: 'var(--fg-dim)' }}>
             {authMode === 'login' ? 'Sign in to continue your journey' : 'Start your educational adventure'}
           </p>
         </div>

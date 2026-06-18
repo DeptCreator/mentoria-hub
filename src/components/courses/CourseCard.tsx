@@ -23,30 +23,30 @@ export default function CourseCard({ course, isEnrolled, progress }: Props) {
   return (
     <Link
       href={`/courses/${course.id}`}
-      className="glass glass-lg card-hover p-6 flex flex-col gap-4 transition-all hover-lift no-underline group"
+      className="glass glass-lg card-hover p-4 sm:p-6 flex flex-col gap-3 sm:gap-4 transition-all hover-lift no-underline group"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-2 flex-wrap">
-            <span className="text-[11px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full" style={{ background: l.bg, color: l.color }}>
+          <div className="flex items-center gap-1.5 sm:gap-2 mb-2 flex-wrap">
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wide px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full" style={{ background: l.bg, color: l.color }}>
               {level}
             </span>
-            <span className="badge-blue">{course.category}</span>
+            <span className="badge-blue text-[11px] sm:text-[12px]">{course.category}</span>
           </div>
-          <h3 className="font-bold text-[18px] leading-tight group-hover:text-[var(--accent)] transition-colors" style={{ color: 'var(--fg)' }}>
+          <h3 className="font-bold text-[16px] sm:text-[18px] leading-tight group-hover:text-[var(--accent)] transition-colors" style={{ color: 'var(--fg)' }}>
             {course.title}
           </h3>
         </div>
-        <div className="w-12 h-12 rounded-[14px] flex items-center justify-center shrink-0" style={{ background: 'var(--surface)' }}>
-          <BookOpen className="w-5 h-5" style={{ color: 'var(--accent)' }} />
+        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[12px] sm:rounded-[14px] flex items-center justify-center shrink-0" style={{ background: 'var(--surface)' }}>
+          <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: 'var(--accent)' }} />
         </div>
       </div>
 
-      <p className="text-[14px] leading-relaxed line-clamp-2" style={{ color: 'var(--fg-dim)' }}>
+      <p className="text-[13px] sm:text-[14px] leading-relaxed line-clamp-2" style={{ color: 'var(--fg-dim)' }}>
         {course.description}
       </p>
 
-      <div className="flex items-center gap-4 text-[13px]" style={{ color: 'var(--muted)' }}>
+      <div className="flex items-center gap-3 sm:gap-4 text-[12px] sm:text-[13px]" style={{ color: 'var(--muted)' }}>
         <span className="flex items-center gap-1">
           <Clock className="w-3.5 h-3.5" />
           {course.duration_hours || `${lessonsCount * 2}h`}

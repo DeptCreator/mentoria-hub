@@ -109,56 +109,56 @@ export default function AdminPage() {
   if (!isAuthenticated || !isAdmin) return null;
 
   return (
-    <div className="min-h-screen pt-[100px] px-6 pb-16" style={{ background: 'var(--bg)' }}>
+    <div className="min-h-screen pt-[88px] sm:pt-[100px] px-4 sm:px-6 pb-16" style={{ background: 'var(--bg)' }}>
       <div className="max-w-[1200px] mx-auto">
-        <div className="flex items-center justify-between flex-wrap gap-4 mb-7">
+        <div className="flex items-center justify-between flex-wrap gap-3 sm:gap-4 mb-6 sm:mb-7">
           <div>
-            <div className="text-[12px] font-semibold uppercase tracking-[0.15em] mb-1" style={{ color: 'var(--accent)' }}>Management</div>
-            <h2 className="font-display text-[clamp(2rem,4vw,3rem)] font-bold" style={{ color: 'var(--fg)' }}>Admin Panel</h2>
+            <div className="text-[11px] sm:text-[12px] font-semibold uppercase tracking-[0.15em] mb-1" style={{ color: 'var(--accent)' }}>Management</div>
+            <h2 className="font-display text-[clamp(1.75rem,6vw,3rem)] font-bold" style={{ color: 'var(--fg)' }}>Admin Panel</h2>
           </div>
-          <button onClick={handleAdd} className="btn-gold inline-flex items-center gap-2 active-press">
+          <button onClick={handleAdd} className="btn-gold inline-flex items-center justify-center gap-2 active-press w-full sm:w-auto">
             <Plus className="w-4 h-4" />
             Add New
           </button>
         </div>
 
         {/* Stats */}
-        <div className="grid gap-4 md:grid-cols-3 mb-8">
-          <div className="glass p-5 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-[14px] flex items-center justify-center" style={{ background: 'rgba(201,169,110,0.15)' }}>
-              <BookOpen className="w-5 h-5" style={{ color: 'var(--accent)' }} />
+        <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-3 mb-6 sm:mb-8">
+          <div className="glass p-4 sm:p-5 flex items-center gap-3 sm:gap-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[12px] sm:rounded-[14px] flex items-center justify-center" style={{ background: 'rgba(201,169,110,0.15)' }}>
+              <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: 'var(--accent)' }} />
             </div>
             <div>
-              <p className="text-[24px] font-bold" style={{ color: 'var(--fg)' }}>{stats.courses}</p>
-              <p className="text-[13px]" style={{ color: 'var(--muted)' }}>Courses</p>
+              <p className="text-[20px] sm:text-[24px] font-bold" style={{ color: 'var(--fg)' }}>{stats.courses}</p>
+              <p className="text-[12px] sm:text-[13px]" style={{ color: 'var(--muted)' }}>Courses</p>
             </div>
           </div>
-          <div className="glass p-5 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-[14px] flex items-center justify-center" style={{ background: 'rgba(99,179,136,0.15)' }}>
-              <Award className="w-5 h-5" style={{ color: '#63b388' }} />
+          <div className="glass p-4 sm:p-5 flex items-center gap-3 sm:gap-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[12px] sm:rounded-[14px] flex items-center justify-center" style={{ background: 'rgba(99,179,136,0.15)' }}>
+              <Award className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: '#63b388' }} />
             </div>
             <div>
-              <p className="text-[24px] font-bold" style={{ color: 'var(--fg)' }}>{stats.opportunities}</p>
-              <p className="text-[13px]" style={{ color: 'var(--muted)' }}>Opportunities</p>
+              <p className="text-[20px] sm:text-[24px] font-bold" style={{ color: 'var(--fg)' }}>{stats.opportunities}</p>
+              <p className="text-[12px] sm:text-[13px]" style={{ color: 'var(--muted)' }}>Opportunities</p>
             </div>
           </div>
-          <div className="glass p-5 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-[14px] flex items-center justify-center" style={{ background: 'rgba(130,160,220,0.15)' }}>
-              <Users className="w-5 h-5" style={{ color: '#82a0dc' }} />
+          <div className="glass p-4 sm:p-5 flex items-center gap-3 sm:gap-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-[12px] sm:rounded-[14px] flex items-center justify-center" style={{ background: 'rgba(130,160,220,0.15)' }}>
+              <Users className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: '#82a0dc' }} />
             </div>
             <div>
-              <p className="text-[24px] font-bold" style={{ color: 'var(--fg)' }}>{stats.users}</p>
-              <p className="text-[13px]" style={{ color: 'var(--muted)' }}>Users</p>
+              <p className="text-[20px] sm:text-[24px] font-bold" style={{ color: 'var(--fg)' }}>{stats.users}</p>
+              <p className="text-[12px] sm:text-[13px]" style={{ color: 'var(--muted)' }}>Users</p>
             </div>
           </div>
         </div>
 
         {/* Tabs + Search */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-5 sm:mb-6">
           <div className="flex gap-1 flex-wrap">
             {(['courses', 'opportunities', 'users'] as const).map(tab => (
               <button key={tab} onClick={() => setActiveTab(tab)}
-                className="px-4 py-2 rounded-[20px] text-sm font-medium cursor-pointer transition-all font-sans"
+                className="px-3 sm:px-4 py-2 rounded-[20px] text-[12px] sm:text-sm font-medium cursor-pointer transition-all font-sans"
                 style={{
                   background: activeTab === tab ? 'var(--surface)' : 'transparent',
                   color: activeTab === tab ? 'var(--accent)' : 'var(--fg-dim)',
@@ -166,7 +166,7 @@ export default function AdminPage() {
                 }}>{tab.charAt(0).toUpperCase() + tab.slice(1)}</button>
             ))}
           </div>
-          <div className="relative max-w-xs">
+          <div className="relative w-full sm:max-w-xs">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--muted)' }} />
             <input
               type="text"
@@ -184,39 +184,39 @@ export default function AdminPage() {
             <table className="admin-table w-full border-collapse">
               <thead>
                 <tr style={{ background: 'var(--surface)' }}>
-                  <th className="text-left px-5 py-3.5 text-[12px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>Title</th>
-                  <th className="text-left px-5 py-3.5 text-[12px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>Category</th>
-                  <th className="text-left px-5 py-3.5 text-[12px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>Status</th>
-                  <th className="text-right px-5 py-3.5 text-[12px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>Actions</th>
+                  <th className="text-left px-3 sm:px-5 py-3 text-[11px] sm:text-[12px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>Title</th>
+                  <th className="text-left px-3 sm:px-5 py-3 text-[11px] sm:text-[12px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>Category</th>
+                  <th className="text-left px-3 sm:px-5 py-3 text-[11px] sm:text-[12px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>Status</th>
+                  <th className="text-right px-3 sm:px-5 py-3 text-[11px] sm:text-[12px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={4} className="px-5 py-10 text-center" style={{ color: 'var(--muted)' }}>Loading...</td></tr>
+                  <tr><td colSpan={4} className="px-3 sm:px-5 py-8 sm:py-10 text-center text-[14px]" style={{ color: 'var(--muted)' }}>Loading...</td></tr>
                 ) : filteredItems.length === 0 ? (
-                  <tr><td colSpan={4} className="px-5 py-10 text-center" style={{ color: 'var(--muted)' }}>No data found.</td></tr>
+                  <tr><td colSpan={4} className="px-3 sm:px-5 py-8 sm:py-10 text-center text-[14px]" style={{ color: 'var(--muted)' }}>No data found.</td></tr>
                 ) : (
                   filteredItems.map(item => (
                     <tr key={item.id} className="table-row-card">
-                      <td className="px-5 py-4 text-[14px] font-medium" style={{ color: 'var(--fg)' }}>{item.title || item.email || 'Untitled'}</td>
-                      <td className="px-5 py-4 text-[14px]">
+                      <td className="px-3 sm:px-5 py-3 sm:py-4 text-[13px] sm:text-[14px] font-medium min-w-[140px]" style={{ color: 'var(--fg)' }}>{item.title || item.email || 'Untitled'}</td>
+                      <td className="px-3 sm:px-5 py-3 sm:py-4 text-[13px] sm:text-[14px]">
                         {activeTab !== 'users' ? (
                           <LevelBadge level={item.level || item.category || 'beginner'} />
                         ) : (
                           <LevelBadge level={item.is_admin ? 'advanced' : 'beginner'} label={item.is_admin ? 'Admin' : 'Student'} />
                         )}
                       </td>
-                      <td className="px-5 py-4 text-[14px]" style={{ color: '#63b388' }}>
+                      <td className="px-3 sm:px-5 py-3 sm:py-4 text-[13px] sm:text-[14px]" style={{ color: '#63b388' }}>
                         {activeTab === 'opportunities' ? 'Active' : (item.is_published !== false ? 'Active' : 'Draft')}
                       </td>
-                      <td className="px-5 py-4 text-right">
-                        <button onClick={() => handleEdit(item)} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-[12px] font-medium mr-2 transition-all"
+                      <td className="px-3 sm:px-5 py-3 sm:py-4 text-right whitespace-nowrap">
+                        <button onClick={() => handleEdit(item)} className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full text-[11px] sm:text-[12px] font-medium mr-1.5 sm:mr-2 transition-all"
                           style={{ background: 'transparent', color: 'var(--fg)', border: '1px solid var(--border-strong)' }}>
-                          <Pencil className="w-3 h-3" /> Edit
+                          <Pencil className="w-3 h-3" /> <span className="hidden sm:inline">Edit</span>
                         </button>
-                        <button onClick={() => handleDelete(item.id)} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-[12px] font-medium transition-all"
+                        <button onClick={() => handleDelete(item.id)} className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full text-[11px] sm:text-[12px] font-medium transition-all"
                           style={{ background: 'transparent', color: '#dc7864', border: '1px solid rgba(220,120,100,0.3)' }}>
-                          <Trash2 className="w-3 h-3" /> Delete
+                          <Trash2 className="w-3 h-3" /> <span className="hidden sm:inline">Delete</span>
                         </button>
                       </td>
                     </tr>
@@ -247,7 +247,7 @@ function LevelBadge({ level, label }: { level: string; label?: string }) {
     advanced: { bg: 'rgba(220,120,100,0.18)', color: '#dc7864' },
   };
   const c = colors[level.toLowerCase()] || colors.beginner;
-  return <span className="inline-block rounded-full px-3 py-1 text-[12px] font-semibold uppercase tracking-wide" style={{ background: c.bg, color: c.color }}>{label || level}</span>;
+  return <span className="inline-block rounded-full px-2.5 sm:px-3 py-1 text-[11px] sm:text-[12px] font-semibold uppercase tracking-wide" style={{ background: c.bg, color: c.color }}>{label || level}</span>;
 }
 
 function AdminModal({ type, item, onClose, onSave }: { type: string; item: any; onClose: () => void; onSave: (data: any) => void }) {
@@ -270,10 +270,10 @@ function AdminModal({ type, item, onClose, onSave }: { type: string; item: any; 
   };
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}>
-      <div className="glass glass-xl w-full max-w-[560px] max-h-[90vh] overflow-y-auto p-6" style={{ borderRadius: 'var(--radius-lg)' }}>
-        <div className="flex items-center justify-between mb-5">
-          <h3 className="font-display text-[22px] font-bold" style={{ color: 'var(--fg)' }}>
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-4" style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}>
+      <div className="glass glass-xl w-full max-w-[560px] max-h-[90vh] overflow-y-auto p-4 sm:p-6" style={{ borderRadius: 'var(--radius-lg)' }}>
+        <div className="flex items-center justify-between mb-4 sm:mb-5">
+          <h3 className="font-display text-[18px] sm:text-[22px] font-bold" style={{ color: 'var(--fg)' }}>
             {item ? 'Edit' : 'Add'} {type.slice(0, -1)}
           </h3>
           <button onClick={onClose} className="w-8 h-8 rounded-full flex items-center justify-center transition-all" style={{ background: 'var(--surface)' }}>
@@ -281,9 +281,9 @@ function AdminModal({ type, item, onClose, onSave }: { type: string; item: any; 
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:gap-4">
           <div>
-            <label className="block text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Title</label>
+            <label className="block text-[12px] sm:text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Title</label>
             <input
               type="text"
               required
@@ -295,7 +295,7 @@ function AdminModal({ type, item, onClose, onSave }: { type: string; item: any; 
           </div>
 
           <div>
-            <label className="block text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Description</label>
+            <label className="block text-[12px] sm:text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Description</label>
             <textarea
               rows={3}
               value={formData.description || ''}
@@ -305,9 +305,9 @@ function AdminModal({ type, item, onClose, onSave }: { type: string; item: any; 
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
-              <label className="block text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Category</label>
+              <label className="block text-[12px] sm:text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Category</label>
               <select
                 value={formData.category || CATEGORIES[0]}
                 onChange={e => setFormData({ ...formData, category: e.target.value })}
@@ -319,7 +319,7 @@ function AdminModal({ type, item, onClose, onSave }: { type: string; item: any; 
 
             {type === 'courses' ? (
               <div>
-                <label className="block text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Level</label>
+                <label className="block text-[12px] sm:text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Level</label>
                 <select
                   value={formData.level || 'beginner'}
                   onChange={e => setFormData({ ...formData, level: e.target.value })}
@@ -330,7 +330,7 @@ function AdminModal({ type, item, onClose, onSave }: { type: string; item: any; 
               </div>
             ) : (
               <div>
-                <label className="block text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Format</label>
+                <label className="block text-[12px] sm:text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Format</label>
                 <select
                   value={formData.format || 'online'}
                   onChange={e => setFormData({ ...formData, format: e.target.value })}
@@ -344,7 +344,7 @@ function AdminModal({ type, item, onClose, onSave }: { type: string; item: any; 
 
           {type === 'courses' && (
             <div>
-              <label className="block text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Duration (hours)</label>
+              <label className="block text-[12px] sm:text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Duration (hours)</label>
               <input
                 type="number"
                 min={1}
@@ -357,9 +357,9 @@ function AdminModal({ type, item, onClose, onSave }: { type: string; item: any; 
 
           {type === 'opportunities' && (
             <>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <label className="block text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Min Grade</label>
+                  <label className="block text-[12px] sm:text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Min Grade</label>
                   <input
                     type="number"
                     min={8}
@@ -370,7 +370,7 @@ function AdminModal({ type, item, onClose, onSave }: { type: string; item: any; 
                   />
                 </div>
                 <div>
-                  <label className="block text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Max Grade</label>
+                  <label className="block text-[12px] sm:text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Max Grade</label>
                   <input
                     type="number"
                     min={8}
@@ -382,7 +382,7 @@ function AdminModal({ type, item, onClose, onSave }: { type: string; item: any; 
                 </div>
               </div>
               <div>
-                <label className="block text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Requirements (comma separated)</label>
+                <label className="block text-[12px] sm:text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Requirements (comma separated)</label>
                 <input
                   type="text"
                   value={Array.isArray(formData.requirements) ? formData.requirements.join(', ') : formData.requirements || ''}
@@ -392,7 +392,7 @@ function AdminModal({ type, item, onClose, onSave }: { type: string; item: any; 
                 />
               </div>
               <div>
-                <label className="block text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Application Link</label>
+                <label className="block text-[12px] sm:text-[13px] font-semibold mb-1.5" style={{ color: 'var(--fg-secondary)' }}>Application Link</label>
                 <input
                   type="url"
                   value={formData.link || ''}
@@ -405,7 +405,7 @@ function AdminModal({ type, item, onClose, onSave }: { type: string; item: any; 
           )}
 
           {type !== 'users' && (
-            <div className="flex items-center gap-2 mt-2">
+            <div className="flex items-center gap-2 mt-1 sm:mt-2">
               <input
                 type="checkbox"
                 id="published"
@@ -413,12 +413,12 @@ function AdminModal({ type, item, onClose, onSave }: { type: string; item: any; 
                 onChange={e => setFormData({ ...formData, is_published: e.target.checked })}
                 className="w-4 h-4 accent-[var(--accent)]"
               />
-              <label htmlFor="published" className="text-[14px]" style={{ color: 'var(--fg-dim)' }}>Published</label>
+              <label htmlFor="published" className="text-[13px] sm:text-[14px]" style={{ color: 'var(--fg-dim)' }}>Published</label>
             </div>
           )}
 
-          <div className="flex gap-3 mt-4">
-            <button type="button" onClick={onClose} className="flex-1 px-5 py-2.5 rounded-full text-[14px] font-semibold transition-all"
+          <div className="flex gap-2 sm:gap-3 mt-3 sm:mt-4">
+            <button type="button" onClick={onClose} className="flex-1 px-4 sm:px-5 py-2.5 rounded-full text-[13px] sm:text-[14px] font-semibold transition-all"
               style={{ background: 'transparent', color: 'var(--fg)', border: '1.5px solid var(--border-strong)' }}>
               Cancel
             </button>

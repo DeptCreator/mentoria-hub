@@ -78,36 +78,36 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--bg)' }}>
-      <div className="glass glass-xl max-w-[520px] w-full p-12 text-center">
+    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 py-6 sm:py-0" style={{ background: 'var(--bg)' }}>
+      <div className="glass glass-xl max-w-[520px] w-full p-6 sm:p-10 md:p-12 text-center">
         {/* Dots */}
-        <div className="flex justify-center gap-2.5 mb-7">
+        <div className="flex justify-center gap-2 sm:gap-2.5 mb-5 sm:mb-7">
           {steps.map((_, i) => (
-            <span key={i} className="h-2.5 rounded transition-all"
+            <span key={i} className="h-2 rounded transition-all"
               style={{
-                width: i === step ? '28px' : '10px',
+                width: i === step ? '24px' : '8px',
                 background: i <= step ? 'var(--accent)' : 'var(--border)',
-                borderRadius: i === step ? '5px' : '50%',
+                borderRadius: i === step ? '4px' : '50%',
               }} />
           ))}
         </div>
 
         {/* Step content */}
-        <h2 className="font-display text-[2rem] font-bold mb-2" style={{ color: 'var(--fg)' }}>{steps[step].title}</h2>
-        <p className="mb-7" style={{ color: 'var(--fg-dim)' }}>{steps[step].sub}</p>
+        <h2 className="font-display text-[1.5rem] sm:text-[2rem] font-bold mb-2" style={{ color: 'var(--fg)' }}>{steps[step].title}</h2>
+        <p className="mb-5 sm:mb-7 text-[14px] sm:text-[16px]" style={{ color: 'var(--fg-dim)' }}>{steps[step].sub}</p>
         {steps[step].render()}
 
         {/* Navigation */}
-        <div className="flex gap-3 justify-center mt-7">
+        <div className="flex gap-2 sm:gap-3 justify-center mt-5 sm:mt-7">
           {step > 0 && (
             <button onClick={() => setStep(step - 1)}
-              className="rounded-full px-6 py-3 text-[15px] font-semibold cursor-pointer font-sans transition-all"
+              className="rounded-full px-4 sm:px-6 py-2.5 sm:py-3 text-[14px] sm:text-[15px] font-semibold cursor-pointer font-sans transition-all"
               style={{ background: 'transparent', color: 'var(--fg)', border: '1.5px solid var(--border-strong)' }}>
               Back
             </button>
           )}
           <button onClick={handleNext} disabled={!canProceed() || loading}
-            className="rounded-full px-6 py-3 text-[15px] font-semibold cursor-pointer font-sans transition-all disabled:opacity-40"
+            className="rounded-full px-4 sm:px-6 py-2.5 sm:py-3 text-[14px] sm:text-[15px] font-semibold cursor-pointer font-sans transition-all disabled:opacity-40"
             style={{ background: 'var(--accent)', color: '#0a0a0f', boxShadow: '0 0 40px var(--accent-glow)' }}>
             {loading ? 'Saving...' : step === steps.length - 1 ? 'Finish' : 'Continue'}
           </button>

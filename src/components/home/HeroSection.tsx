@@ -19,26 +19,26 @@ export default function HeroSection() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 text-center px-6 max-w-[800px] mx-auto">
-        <div className="glass glass-xl p-10 md:p-14 animate-fadeIn">
-          <h1 className="font-display text-[clamp(2.5rem,5vw,4rem)] font-bold leading-[1.1] mb-4" style={{ color: 'var(--fg)' }}>
-            Discover Your<br />
-            <span style={{ color: 'var(--accent)' }}>Educational Path</span>
+      <div className="relative z-10 text-center px-4 sm:px-6 max-w-[800px] mx-auto w-full">
+        <div className="glass glass-xl p-6 sm:p-10 md:p-14 animate-fadeIn">
+          <h1 className="font-display text-[clamp(2rem,8vw,4rem)] font-bold leading-[1.1] mb-4" style={{ color: 'var(--fg)' }}>
+            Discover Your<br className="hidden sm:block" />
+            <span style={{ color: 'var(--accent)' }}> Educational Path</span>
           </h1>
-          <p className="text-[18px] mb-8 leading-relaxed" style={{ color: 'var(--fg-dim)' }}>
+          <p className="text-[15px] sm:text-[18px] mb-6 sm:mb-8 leading-relaxed px-1" style={{ color: 'var(--fg-dim)' }}>
             Find competitions, scholarships, and courses tailored to your goals. 
             Learn at your own pace with AI-powered guidance.
           </p>
-          <div className="flex gap-4 justify-center flex-wrap">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
             <Link
               href="/opportunities"
-              className="btn-gold inline-flex items-center gap-2 no-underline"
+              className="btn-gold inline-flex items-center justify-center gap-2 no-underline w-full sm:w-auto"
             >
               Find Opportunities →
             </Link>
             <Link
               href="/courses"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-[14px] font-semibold no-underline transition-all"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-[14px] font-semibold no-underline transition-all w-full sm:w-auto"
               style={{ background: 'transparent', color: 'var(--fg)', border: '1.5px solid var(--border-strong)' }}
             >
               Start Learning
@@ -47,11 +47,11 @@ export default function HeroSection() {
         </div>
 
         {/* Scroll indicator */}
-        <div className="mt-12 flex flex-col items-center gap-2" style={{ animation: 'scrollDot 2s infinite' }}>
-          <div className="w-6 h-10 rounded-full border-2 flex items-start justify-center pt-2" style={{ borderColor: 'var(--border-strong)' }}>
+        <div className="mt-8 sm:mt-12 flex flex-col items-center gap-2" style={{ animation: 'scrollDot 2s infinite' }}>
+          <div className="w-5 h-9 sm:w-6 sm:h-10 rounded-full border-2 flex items-start justify-center pt-1.5 sm:pt-2" style={{ borderColor: 'var(--border-strong)' }}>
             <div className="w-1 h-2 rounded-full" style={{ background: 'var(--accent)' }} />
           </div>
-          <span className="text-[12px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>Scroll</span>
+          <span className="text-[11px] sm:text-[12px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>Scroll</span>
         </div>
       </div>
     </section>

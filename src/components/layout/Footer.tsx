@@ -3,15 +3,15 @@
 export default function Footer() {
   return (
     <footer className="border-t border-[var(--border)]" style={{ background: 'var(--bg-alt)' }}>
-      <div className="container-page py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="container-page py-10 sm:py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
           {/* Brand */}
-          <div className="md:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <img src="/images/logo-icon.svg" alt="M" className="w-8 h-8" />
-              <span className="font-display text-[20px] font-bold" style={{ color: 'var(--fg)' }}>Mentoria</span>
+          <div className="col-span-2 md:col-span-1">
+            <div className="flex items-center gap-2 mb-3 sm:mb-4">
+              <img src="/images/logo-icon.svg" alt="M" className="w-7 h-7 sm:w-8 sm:h-8" />
+              <span className="font-display text-[18px] sm:text-[20px] font-bold" style={{ color: 'var(--fg)' }}>Mentoria</span>
             </div>
-            <p className="text-[14px] leading-relaxed" style={{ color: 'var(--fg-dim)' }}>
+            <p className="text-[13px] sm:text-[14px] leading-relaxed" style={{ color: 'var(--fg-dim)' }}>
               Empowering students in Kazakhstan & CIS with educational opportunities and async learning.
             </p>
           </div>

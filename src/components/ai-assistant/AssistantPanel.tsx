@@ -126,8 +126,8 @@ export default function AssistantPanel({ isOpen, onClose }: Props) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-24 right-6 z-[200] w-[400px] max-w-[calc(100vw-48px)] glass glass-xl flex flex-col overflow-hidden"
-      style={{ height: '560px', boxShadow: '0 20px 60px rgba(0,0,0,0.5)', borderRadius: 'var(--radius-lg)' }}
+    <div className="fixed bottom-0 sm:bottom-24 left-0 sm:left-auto right-0 sm:right-4 md:right-6 z-[200] w-full sm:w-[380px] md:w-[400px] sm:max-w-[calc(100vw-32px)] glass glass-xl flex flex-col overflow-hidden h-[100dvh] sm:h-[520px] rounded-t-[var(--radius-lg)] sm:rounded-[var(--radius-lg)]"
+      style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.5)' }}
     >
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b" style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}>

@@ -11,7 +11,7 @@ export default function VoiceAssistant() {
       {/* Voice FAB */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-7 right-7 z-[200] w-14 h-14 rounded-full border-none cursor-pointer flex items-center justify-center transition-all"
+        className="fixed bottom-5 sm:bottom-7 right-5 sm:right-7 z-[200] w-12 h-12 sm:w-14 sm:h-14 rounded-full border-none cursor-pointer flex items-center justify-center transition-all"
         style={{
           background: 'var(--accent)',
           boxShadow: '0 0 40px var(--accent-glow)',

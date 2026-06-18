@@ -17,8 +17,8 @@ export default function LessonPlayer({ lesson, onComplete }: Props) {
   const videoId = lesson.video_url ? extractVideoId(lesson.video_url) : '';
 
   return (
-    <div className="space-y-5">
-      <div className="aspect-video w-full rounded-[var(--radius-lg)] overflow-hidden bg-black border border-[var(--border)] shadow-2xl">
+    <div className="space-y-4 sm:space-y-5">
+      <div className="aspect-video w-full rounded-[var(--radius-md)] sm:rounded-[var(--radius-lg)] overflow-hidden bg-black border border-[var(--border)] shadow-2xl">
         {videoId ? (
           <iframe
             width="100%"
@@ -31,21 +31,21 @@ export default function LessonPlayer({ lesson, onComplete }: Props) {
           />
         ) : (
           <div className="flex h-full flex-col items-center justify-center text-white gap-3">
-            <PlayCircle className="w-14 h-14 opacity-50" />
-            <p className="text-[16px] opacity-70">No video available for this lesson</p>
+            <PlayCircle className="w-12 h-12 sm:w-14 sm:h-14 opacity-50" />
+            <p className="text-[14px] sm:text-[16px] opacity-70">No video available for this lesson</p>
           </div>
         )}
       </div>
 
-      <div className="glass p-6" style={{ borderRadius: 'var(--radius-lg)' }}>
-        <div className="flex items-start justify-between gap-4 flex-wrap">
+      <div className="glass p-4 sm:p-6" style={{ borderRadius: 'var(--radius-lg)' }}>
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div>
-            <h3 className="font-bold text-[22px] mb-2" style={{ color: 'var(--fg)' }}>{lesson.title}</h3>
-            <p className="text-[15px] leading-relaxed" style={{ color: 'var(--fg-dim)' }}>{lesson.description}</p>
+            <h3 className="font-bold text-[18px] sm:text-[22px] mb-2" style={{ color: 'var(--fg)' }}>{lesson.title}</h3>
+            <p className="text-[14px] sm:text-[15px] leading-relaxed" style={{ color: 'var(--fg-dim)' }}>{lesson.description}</p>
           </div>
           <button
             onClick={onComplete}
-            className="btn-gold inline-flex items-center gap-2 shrink-0 active-press"
+            className="btn-gold inline-flex items-center justify-center gap-2 shrink-0 active-press w-full sm:w-auto"
           >
             <CheckCircle className="w-4 h-4" />
             Mark Complete
@@ -54,8 +54,8 @@ export default function LessonPlayer({ lesson, onComplete }: Props) {
       </div>
 
       {lesson.materials && lesson.materials.length > 0 && (
-        <div className="glass p-6" style={{ borderRadius: 'var(--radius-lg)' }}>
-          <h4 className="font-bold text-[16px] mb-4 flex items-center gap-2" style={{ color: 'var(--fg)' }}>
+        <div className="glass p-4 sm:p-6" style={{ borderRadius: 'var(--radius-lg)' }}>
+          <h4 className="font-bold text-[15px] sm:text-[16px] mb-3 sm:mb-4 flex items-center gap-2" style={{ color: 'var(--fg)' }}>
             <FileText className="w-4 h-4" style={{ color: 'var(--accent)' }} />
             Materials
           </h4>
@@ -63,10 +63,10 @@ export default function LessonPlayer({ lesson, onComplete }: Props) {
             {lesson.materials.map((material, i) => (
               <li
                 key={i}
-                className="text-[14px] p-3 rounded-lg flex items-center gap-2"
+                className="text-[13px] sm:text-[14px] p-2.5 sm:p-3 rounded-lg flex items-center gap-2"
                 style={{ background: 'var(--surface)', color: 'var(--fg-dim)' }}
               >
-                <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--accent)' }} />
+                <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: 'var(--accent)' }} />
                 {material}
               </li>
             ))}

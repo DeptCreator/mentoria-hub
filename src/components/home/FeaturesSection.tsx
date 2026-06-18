@@ -17,11 +17,11 @@ export default function FeaturesSection() {
             Everything you need to grow
           </h2>
         </div>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((f) => (
             <div
               key={f.title}
-              className="glass glass-lg card-hover p-7 transition-all text-center"
+              className="glass glass-lg card-hover p-5 sm:p-7 transition-all text-center"
               style={{ transition: 'all 0.35s' }}
               onMouseOver={e => { e.currentTarget.style.background = 'var(--surface-hover)'; e.currentTarget.style.borderColor = 'var(--border-strong)'; e.currentTarget.style.transform = 'translateY(-4px)'; }}
               onMouseOut={e => { e.currentTarget.style.background = ''; e.currentTarget.style.borderColor = ''; e.currentTarget.style.transform = ''; }}

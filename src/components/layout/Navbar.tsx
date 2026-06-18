@@ -29,9 +29,9 @@ export default function Navbar() {
         style={{ background: 'var(--surface)', backdropFilter: 'blur(18px)', borderBottom: '1px solid var(--border)' }}
       >
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 no-underline">
-          <img src="/images/logo-icon.svg" alt="M" className="w-9 h-9" />
-          <span className="font-display text-[22px] font-bold tracking-tight" style={{ color: 'var(--fg)' }}>
+        <Link href="/" className="flex items-center gap-2.5 sm:gap-3 no-underline">
+          <img src="/images/logo-icon.svg" alt="M" className="w-8 h-8 sm:w-9 sm:h-9" />
+          <span className="font-display text-[18px] sm:text-[22px] font-bold tracking-tight" style={{ color: 'var(--fg)' }}>
             Mentoria
           </span>
         </Link>
@@ -66,29 +66,30 @@ export default function Navbar() {
           <ThemeToggle />
           
           {isAuthenticated ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <Link
                 href="/dashboard"
-                className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-[20px] text-[14px] font-medium no-underline transition-all"
+                className="hidden sm:flex items-center gap-2 px-3 sm:px-4 py-2 rounded-[20px] text-[13px] sm:text-[14px] font-medium no-underline transition-all"
                 style={{ background: 'var(--surface)', color: 'var(--fg)' }}
               >
-                <span>{user?.email?.split('@')[0]}</span>
+                <span className="max-w-[80px] truncate">{user?.email?.split('@')[0]}</span>
               </Link>
               <button
                 onClick={signOut}
-                className="px-4 py-2 rounded-[20px] text-[14px] font-medium cursor-pointer transition-all"
+                className="px-3 sm:px-4 py-2 rounded-[20px] text-[13px] sm:text-[14px] font-medium cursor-pointer transition-all"
                 style={{ background: 'transparent', color: 'var(--fg-dim)', border: '1px solid var(--border)' }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--border-strong)'; e.currentTarget.style.color = 'var(--fg)'; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--fg-dim)'; }}
               >
-                Logout
+                <span className="hidden sm:inline">Logout</span>
+                <span className="sm:hidden">Out</span>
               </button>
             </div>
           ) : (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <button
                 onClick={() => openAuth('login')}
-                className="px-4 py-2 rounded-[20px] text-[14px] font-medium cursor-pointer transition-all"
+                className="hidden sm:inline-flex px-4 py-2 rounded-[20px] text-[14px] font-medium cursor-pointer transition-all"
                 style={{ background: 'transparent', color: 'var(--fg-dim)', border: '1px solid var(--border)' }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--border-strong)'; e.currentTarget.style.color = 'var(--fg)'; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--fg-dim)'; }}
@@ -97,17 +98,19 @@ export default function Navbar() {
               </button>
               <button
                 onClick={() => openAuth('register')}
-                className="px-4 py-2 rounded-[20px] text-[14px] font-semibold cursor-pointer transition-all"
+                className="px-3 sm:px-4 py-2 rounded-[20px] text-[13px] sm:text-[14px] font-semibold cursor-pointer transition-all"
                 style={{ background: 'var(--accent)', color: '#0a0a0f', boxShadow: '0 0 30px var(--accent-glow)' }}
               >
-                Get Started
+                <span className="hidden sm:inline">Get Started</span>
+                <span className="sm:hidden">Join</span>
               </button>
             </div>
           )}
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 cursor-pointer"
+            className="md:hidden w-11 h-11 min-w-[44px] min-h-[44px] flex flex-col items-center justify-center gap-1.5 cursor-pointer rounded-full active-press"
+            style={{ background: 'var(--surface)' }}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             <span className="w-5 h-0.5 rounded transition-all" style={{ background: 'var(--fg)', transform: mobileMenuOpen ? 'rotate(45deg) translateY(4px)' : 'none' }} />
@@ -119,7 +122,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-[99] flex flex-col items-center justify-center gap-6"
+        <div className="fixed inset-0 z-[99] flex flex-col items-center justify-center gap-5 px-6"
           style={{ background: 'var(--bg)', backdropFilter: 'blur(20px)' }}
         >
           {navLinks.map(link => (
@@ -127,18 +130,54 @@ export default function Navbar() {
               key={link.href}
               href={link.href}
               onClick={() => setMobileMenuOpen(false)}
-              className="font-display text-[28px] font-bold no-underline transition-all"
+              className="font-display text-[clamp(1.5rem,6vw,2rem)] font-bold no-underline transition-all py-2"
               style={{ color: 'var(--fg)' }}
             >
               {link.label}
             </Link>
           ))}
+          {isAuthenticated && (
+            <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="font-display text-[clamp(1.5rem,6vw,2rem)] font-bold no-underline py-2" style={{ color: 'var(--accent)' }}>
+              Dashboard
+            </Link>
+          )}
           {isAdmin && (
-            <Link href="/admin" onClick={() => setMobileMenuOpen(false)} className="font-display text-[28px] font-bold no-underline" style={{ color: 'var(--accent)' }}>
+            <Link href="/admin" onClick={() => setMobileMenuOpen(false)} className="font-display text-[clamp(1.5rem,6vw,2rem)] font-bold no-underline py-2" style={{ color: 'var(--accent)' }}>
               Admin
             </Link>
           )}
-          <button onClick={() => setMobileMenuOpen(false)} className="absolute top-6 right-6 text-[24px] cursor-pointer" style={{ color: 'var(--fg-dim)' }}>
+
+          {/* Mobile auth actions */}
+          <div className="flex flex-col items-center gap-3 mt-4 w-full max-w-[260px]">
+            {!isAuthenticated ? (
+              <>
+                <button
+                  onClick={() => { setMobileMenuOpen(false); openAuth('login'); }}
+                  className="w-full py-3 rounded-[20px] text-[15px] font-semibold cursor-pointer"
+                  style={{ background: 'var(--surface)', color: 'var(--fg)' }}
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={() => { setMobileMenuOpen(false); openAuth('register'); }}
+                  className="w-full py-3 rounded-[20px] text-[15px] font-semibold cursor-pointer"
+                  style={{ background: 'var(--accent)', color: '#0a0a0f' }}
+                >
+                  Get Started
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => { setMobileMenuOpen(false); signOut(); }}
+                className="w-full py-3 rounded-[20px] text-[15px] font-semibold cursor-pointer"
+                style={{ background: 'var(--surface)', color: 'var(--fg)' }}
+              >
+                Logout
+              </button>
+            )}
+          </div>
+
+          <button onClick={() => setMobileMenuOpen(false)} className="absolute top-5 right-5 w-11 h-11 rounded-full flex items-center justify-center text-[20px] cursor-pointer active-press" style={{ background: 'var(--surface)', color: 'var(--fg-dim)' }}>
             ✕
           </button>
         </div>

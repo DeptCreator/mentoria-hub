@@ -19,22 +19,22 @@ export default function OpportunityCard({ opportunity, isSaved, onSave, onUnsave
   const formatBadge = (format: string) => format?.charAt(0).toUpperCase() + format?.slice(1) || 'Online';
 
   return (
-    <div className="glass glass-lg card-hover p-6 flex flex-col gap-4 transition-all hover-lift">
+    <div className="glass glass-lg card-hover p-4 sm:p-6 flex flex-col gap-3 sm:gap-4 transition-all hover-lift">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-2 flex-wrap">
-            <span className="badge-gold">{opportunity.category}</span>
-            <span className="badge-blue">{formatBadge(opportunity.format)}</span>
+          <div className="flex items-center gap-1.5 sm:gap-2 mb-2 flex-wrap">
+            <span className="badge-gold text-[11px] sm:text-[12px]">{opportunity.category}</span>
+            <span className="badge-blue text-[11px] sm:text-[12px]">{formatBadge(opportunity.format)}</span>
             {opportunity.grade_min && (
-              <span className="badge-green">Grades {opportunity.grade_min}-{opportunity.grade_max || opportunity.grade_min}</span>
+              <span className="badge-green text-[11px] sm:text-[12px]">Grades {opportunity.grade_min}-{opportunity.grade_max || opportunity.grade_min}</span>
             )}
           </div>
-          <h3 className="font-bold text-[18px] leading-tight" style={{ color: 'var(--fg)' }}>{opportunity.title}</h3>
+          <h3 className="font-bold text-[16px] sm:text-[18px] leading-tight" style={{ color: 'var(--fg)' }}>{opportunity.title}</h3>
         </div>
         {isAuthenticated && (
           <button
             onClick={isSaved ? onUnsave : onSave}
-            className="w-10 h-10 rounded-full flex items-center justify-center transition-all active-press"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all active-press shrink-0"
             style={{
               background: isSaved ? 'var(--accent)' : 'var(--surface)',
               border: isSaved ? 'none' : '1px solid var(--border)',

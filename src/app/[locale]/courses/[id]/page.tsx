@@ -68,9 +68,9 @@ export default function CourseDetailPage() {
 
   if (loading || !course) {
     return (
-      <div className="min-h-screen pt-[100px] px-6 pb-16" style={{ background: 'var(--bg)' }}>
+      <div className="min-h-screen pt-[88px] sm:pt-[100px] px-4 sm:px-6 pb-16" style={{ background: 'var(--bg)' }}>
         <div className="max-w-[1200px] mx-auto">
-          <div className="h-8 w-64 rounded shimmer mb-8" />
+          <div className="h-8 w-64 rounded shimmer mb-6 sm:mb-8" />
           <div className="grid gap-5 lg:grid-cols-[1fr_340px]">
             <div className="aspect-video rounded shimmer" />
             <div className="h-[400px] rounded shimmer" />
@@ -81,38 +81,38 @@ export default function CourseDetailPage() {
   }
 
   return (
-    <div className="min-h-screen pt-[100px] px-6 pb-16" style={{ background: 'var(--bg)' }}>
+    <div className="min-h-screen pt-[88px] sm:pt-[100px] px-4 sm:px-6 pb-16" style={{ background: 'var(--bg)' }}>
       <div className="max-w-[1200px] mx-auto">
         <Link
           href="/courses"
-          className="inline-flex items-center gap-2 text-[14px] font-medium mb-6 no-underline transition-colors hover:text-[var(--accent)]"
+          className="inline-flex items-center gap-2 text-[13px] sm:text-[14px] font-medium mb-4 sm:mb-6 no-underline transition-colors hover:text-[var(--accent)]"
           style={{ color: 'var(--fg-dim)' }}
         >
           <ChevronLeft className="w-4 h-4" /> Back to Courses
         </Link>
 
-        <div className="grid gap-6 lg:grid-cols-[1fr_340px] items-start">
+        <div className="grid gap-5 sm:gap-6 lg:grid-cols-[1fr_340px] items-start">
           {/* Main content */}
           <div>
-            <div className="mb-6">
+            <div className="mb-5 sm:mb-6">
               <div className="flex items-center gap-2 mb-3 flex-wrap">
-                <span className="badge-blue">{course.category}</span>
-                <span className="badge-gold">{course.level}</span>
+                <span className="badge-blue text-[11px] sm:text-[12px]">{course.category}</span>
+                <span className="badge-gold text-[11px] sm:text-[12px]">{course.level}</span>
               </div>
-              <h1 className="font-display text-[clamp(1.75rem,3vw,2.5rem)] font-bold mb-2" style={{ color: 'var(--fg)' }}>
+              <h1 className="font-display text-[clamp(1.5rem,6vw,2.25rem)] font-bold mb-2" style={{ color: 'var(--fg)' }}>
                 {course.title}
               </h1>
-              <p className="text-[16px]" style={{ color: 'var(--fg-dim)' }}>{course.description}</p>
+              <p className="text-[14px] sm:text-[16px]" style={{ color: 'var(--fg-dim)' }}>{course.description}</p>
             </div>
 
             {!isEnrolled(courseId) ? (
-              <div className="glass glass-xl p-8 text-center" style={{ borderRadius: 'var(--radius-lg)' }}>
-                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(201,169,110,0.15)' }}>
-                  <Lock className="w-7 h-7" style={{ color: 'var(--accent)' }} />
+              <div className="glass glass-xl p-6 sm:p-8 text-center" style={{ borderRadius: 'var(--radius-lg)' }}>
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(201,169,110,0.15)' }}>
+                  <Lock className="w-6 h-6 sm:w-7 sm:h-7" style={{ color: 'var(--accent)' }} />
                 </div>
-                <h3 className="font-bold text-[20px] mb-2" style={{ color: 'var(--fg)' }}>Enroll to access lessons</h3>
-                <p className="mb-6" style={{ color: 'var(--fg-dim)' }}>Start learning today and track your progress.</p>
-                <button onClick={handleEnroll} className="btn-gold">
+                <h3 className="font-bold text-[18px] sm:text-[20px] mb-2" style={{ color: 'var(--fg)' }}>Enroll to access lessons</h3>
+                <p className="mb-5 sm:mb-6 text-[14px]" style={{ color: 'var(--fg-dim)' }}>Start learning today and track your progress.</p>
+                <button onClick={handleEnroll} className="btn-gold w-full sm:w-auto">
                   {isAuthenticated ? 'Enroll Now' : 'Sign In to Enroll'}
                 </button>
               </div>
@@ -139,11 +139,11 @@ export default function CourseDetailPage() {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-4">
+          <div className="space-y-4 order-first lg:order-last">
             {enrollment && (
-              <div className="glass p-5" style={{ borderRadius: 'var(--radius-lg)' }}>
+              <div className="glass p-4 sm:p-5" style={{ borderRadius: 'var(--radius-lg)' }}>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[14px] font-semibold" style={{ color: 'var(--fg)' }}>Course Progress</span>
+                  <span className="text-[13px] sm:text-[14px] font-semibold" style={{ color: 'var(--fg)' }}>Course Progress</span>
                   <span className="font-bold" style={{ color: enrollment.progress_percent === 100 ? '#63b388' : 'var(--accent)' }}>
                     {enrollment.progress_percent}%
                   </span>
@@ -159,8 +159,8 @@ export default function CourseDetailPage() {
               </div>
             )}
 
-            <div className="glass p-5" style={{ borderRadius: 'var(--radius-lg)' }}>
-              <h3 className="font-bold text-[16px] mb-4 flex items-center gap-2" style={{ color: 'var(--fg)' }}>
+            <div className="glass p-4 sm:p-5" style={{ borderRadius: 'var(--radius-lg)' }}>
+              <h3 className="font-bold text-[15px] sm:text-[16px] mb-3 sm:mb-4 flex items-center gap-2" style={{ color: 'var(--fg)' }}>
                 <BookOpen className="w-4 h-4" style={{ color: 'var(--accent)' }} />
                 Lessons ({lessons.length})
               </h3>
@@ -173,40 +173,40 @@ export default function CourseDetailPage() {
                       key={lesson.id}
                       onClick={() => { setActiveLesson(index); setShowQuiz(false); }}
                       disabled={!isEnrolled(courseId)}
-                      className={`w-full text-left p-3 rounded-lg transition-all flex items-center gap-3 ${
+                      className={`w-full text-left p-2.5 sm:p-3 rounded-lg transition-all flex items-center gap-2 sm:gap-3 ${
                         isActive ? 'bg-[var(--surface)] border border-[var(--accent)]' : 'hover:bg-[var(--surface)]'
                       }`}
                       style={{ border: isActive ? '1px solid var(--accent)' : '1px solid transparent' }}
                     >
-                      <div className="w-7 h-7 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0"
+                      <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-[11px] sm:text-[12px] font-bold shrink-0"
                         style={{
                           background: isCompleted ? '#63b388' : isActive ? 'var(--accent)' : 'var(--surface)',
                           color: isCompleted || isActive ? '#0a0a0f' : 'var(--fg-dim)',
                         }}
                       >
-                        {isCompleted ? <CheckCircle className="w-4 h-4" /> : index + 1}
+                        {isCompleted ? <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : index + 1}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className={`text-[13px] font-medium truncate ${isActive ? 'text-[var(--accent)]' : 'text-[var(--fg)]'}`}>
+                        <p className={`text-[12px] sm:text-[13px] font-medium truncate ${isActive ? 'text-[var(--accent)]' : 'text-[var(--fg)]'}`}>
                           {lesson.title}
                         </p>
                         {quizScores[lesson.id] !== undefined && (
-                          <p className="text-[11px]" style={{ color: 'var(--muted)' }}>Quiz: {quizScores[lesson.id]}%</p>
+                          <p className="text-[10px] sm:text-[11px]" style={{ color: 'var(--muted)' }}>Quiz: {quizScores[lesson.id]}%</p>
                         )}
                       </div>
-                      {!isEnrolled(courseId) && <Lock className="w-3.5 h-3.5" style={{ color: 'var(--muted)' }} />}
+                      {!isEnrolled(courseId) && <Lock className="w-3 h-3 sm:w-3.5 sm:h-3.5" style={{ color: 'var(--muted)' }} />}
                     </button>
                   );
                 })}
               </div>
             </div>
 
-            <div className="glass p-5" style={{ borderRadius: 'var(--radius-lg)' }}>
-              <h3 className="font-bold text-[16px] mb-3 flex items-center gap-2" style={{ color: 'var(--fg)' }}>
+            <div className="glass p-4 sm:p-5" style={{ borderRadius: 'var(--radius-lg)' }}>
+              <h3 className="font-bold text-[15px] sm:text-[16px] mb-3 flex items-center gap-2" style={{ color: 'var(--fg)' }}>
                 <Award className="w-4 h-4" style={{ color: 'var(--accent)' }} />
                 What you'll earn
               </h3>
-              <ul className="text-[14px] space-y-2" style={{ color: 'var(--fg-dim)' }}>
+              <ul className="text-[13px] sm:text-[14px] space-y-2" style={{ color: 'var(--fg-dim)' }}>
                 <li className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5" style={{ color: '#63b388' }} /> Certificate of completion</li>
                 <li className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5" style={{ color: '#63b388' }} /> Practical knowledge</li>
                 <li className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5" style={{ color: '#63b388' }} /> Progress tracking</li>

@@ -2,12 +2,26 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
+import type { Metadata, Viewport } from 'next';
 import Navbar from '@/components/layout/Navbar';
 import ThemeProvider from '@/components/layout/ThemeProvider';
 import VoiceAssistant from '@/components/ai-assistant/VoiceAssistant';
 import Footer from '@/components/layout/Footer';
 import ToastContainer from '@/components/layout/Toast';
 import '@/app/globals.css';
+
+export const metadata: Metadata = {
+  title: 'Mentoria Hub — Educational Opportunities & Async Learning',
+  description: 'Find competitions, scholarships, internships, and self-paced courses tailored for students in Kazakhstan & CIS.',
+  keywords: ['education', 'scholarships', 'competitions', 'courses', 'mentoria', 'kazakhstan'],
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: '#0a0a0f',
+};
 
 const themeInitScript = `
   (function() {

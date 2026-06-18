@@ -28,19 +28,19 @@ export default function RoadmapPage() {
   const recommendedOpportunities = opportunities.filter(o => o.grade_min && o.grade_max && activeGrade >= o.grade_min && activeGrade <= o.grade_max).slice(0, 3);
 
   return (
-    <div className="min-h-screen pt-[100px] px-6 pb-16" style={{ background: 'var(--bg)' }}>
+    <div className="min-h-screen pt-[88px] sm:pt-[100px] px-4 sm:px-6 pb-16" style={{ background: 'var(--bg)' }}>
       <div className="max-w-[1200px] mx-auto">
-        <h2 className="font-display text-[clamp(2rem,4vw,3rem)] font-bold mb-2 text-center" style={{ color: 'var(--fg)' }}>Your Roadmap</h2>
-        <p className="text-center mb-10" style={{ color: 'var(--fg-dim)' }}>Grade-by-grade plan for high school success.</p>
+        <h2 className="font-display text-[clamp(1.75rem,6vw,3rem)] font-bold mb-2 text-center" style={{ color: 'var(--fg)' }}>Your Roadmap</h2>
+        <p className="text-center mb-6 sm:mb-10 text-[14px] sm:text-[16px]" style={{ color: 'var(--fg-dim)' }}>Grade-by-grade plan for high school success.</p>
 
         {/* Timeline */}
-        <div className="flex justify-between items-start gap-4 mb-10 overflow-x-auto pb-4 flex-wrap" id="roadmapTimeline">
+        <div className="flex justify-between items-start gap-3 sm:gap-4 mb-6 sm:mb-10 overflow-x-auto pb-4" id="roadmapTimeline">
           {ROADMAP_STAGES.map((s) => {
             const isActive = activeGrade === s.grade;
             const isDone = activeGrade > s.grade;
             return (
-              <div key={s.grade} className="text-center flex-1 min-w-[120px] cursor-pointer" onClick={() => setActiveGrade(s.grade)}>
-                <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-2 text-[20px] font-bold transition-all"
+              <div key={s.grade} className="text-center flex-1 min-w-[90px] sm:min-w-[120px] cursor-pointer" onClick={() => setActiveGrade(s.grade)}>
+                <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-full flex items-center justify-center mx-auto mb-2 text-[16px] sm:text-[20px] font-bold transition-all"
                   style={{
                     background: isDone ? '#63b388' : isActive ? 'var(--accent)' : 'var(--surface)',
                     color: isDone || isActive ? '#0a0a0f' : 'var(--fg-dim)',
@@ -49,8 +49,8 @@ export default function RoadmapPage() {
                   }}>
                   {isDone ? '✓' : s.grade}
                 </div>
-                <div style={{ fontWeight: 600, color: isActive ? 'var(--accent)' : 'var(--fg)' }}>Grade {s.grade}</div>
-                <div className="text-[12px]" style={{ color: isActive ? 'var(--accent)' : 'var(--muted)' }}>
+                <div className="text-[12px] sm:text-[14px]" style={{ fontWeight: 600, color: isActive ? 'var(--accent)' : 'var(--fg)' }}>Grade {s.grade}</div>
+                <div className="text-[10px] sm:text-[12px]" style={{ color: isActive ? 'var(--accent)' : 'var(--muted)' }}>
                   {isDone ? 'Completed' : isActive ? 'Current' : 'Upcoming'}
                 </div>
               </div>
@@ -60,30 +60,30 @@ export default function RoadmapPage() {
 
         {/* Detail */}
         {stage && (
-          <div className="glass p-7" style={{ borderRadius: 'var(--radius-lg)' }}>
-            <h3 className="font-bold text-[1.3rem] mb-4" style={{ color: 'var(--fg)' }}>Grade {activeGrade} — Focus Areas</h3>
-            <div className="grid gap-5 md:grid-cols-3">
-              <div className="p-4 rounded-xl" style={{ background: 'var(--surface)' }}>
-                <h4 className="font-semibold mb-2" style={{ color: 'var(--fg)' }}>Goals</h4>
-                <ul className="list-none flex flex-col gap-1.5 text-[14px]" style={{ color: 'var(--fg-dim)' }}>
+          <div className="glass p-5 sm:p-7" style={{ borderRadius: 'var(--radius-lg)' }}>
+            <h3 className="font-bold text-[1.1rem] sm:text-[1.3rem] mb-3 sm:mb-4" style={{ color: 'var(--fg)' }}>Grade {activeGrade} — Focus Areas</h3>
+            <div className="grid gap-3 sm:gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="p-3 sm:p-4 rounded-xl" style={{ background: 'var(--surface)' }}>
+                <h4 className="font-semibold mb-2 text-[14px] sm:text-[16px]" style={{ color: 'var(--fg)' }}>Goals</h4>
+                <ul className="list-none flex flex-col gap-1.5 text-[13px] sm:text-[14px]" style={{ color: 'var(--fg-dim)' }}>
                   {stage.milestones.map((m, i) => <li key={i}>• {m}</li>)}
                 </ul>
               </div>
-              <div className="p-4 rounded-xl" style={{ background: 'var(--surface)' }}>
-                <h4 className="font-semibold mb-2" style={{ color: 'var(--fg)' }}>Courses</h4>
+              <div className="p-3 sm:p-4 rounded-xl" style={{ background: 'var(--surface)' }}>
+                <h4 className="font-semibold mb-2 text-[14px] sm:text-[16px]" style={{ color: 'var(--fg)' }}>Courses</h4>
                 {recommendedCourses.length > 0 ? (
-                  <ul className="list-none flex flex-col gap-1.5 text-[14px]" style={{ color: 'var(--fg-dim)' }}>
+                  <ul className="list-none flex flex-col gap-1.5 text-[13px] sm:text-[14px]" style={{ color: 'var(--fg-dim)' }}>
                     {recommendedCourses.map(c => <li key={c.id}>• <Link href={`/courses/${c.id}`} style={{ color: 'var(--accent)' }}>{c.title}</Link></li>)}
                   </ul>
-                ) : <p className="text-[14px]" style={{ color: 'var(--muted)' }}>No recommendations yet.</p>}
+                ) : <p className="text-[13px] sm:text-[14px]" style={{ color: 'var(--muted)' }}>No recommendations yet.</p>}
               </div>
-              <div className="p-4 rounded-xl" style={{ background: 'var(--surface)' }}>
-                <h4 className="font-semibold mb-2" style={{ color: 'var(--fg)' }}>Opportunities</h4>
+              <div className="p-3 sm:p-4 rounded-xl sm:col-span-2 lg:col-span-1" style={{ background: 'var(--surface)' }}>
+                <h4 className="font-semibold mb-2 text-[14px] sm:text-[16px]" style={{ color: 'var(--fg)' }}>Opportunities</h4>
                 {recommendedOpportunities.length > 0 ? (
-                  <ul className="list-none flex flex-col gap-1.5 text-[14px]" style={{ color: 'var(--fg-dim)' }}>
+                  <ul className="list-none flex flex-col gap-1.5 text-[13px] sm:text-[14px]" style={{ color: 'var(--fg-dim)' }}>
                     {recommendedOpportunities.map(o => <li key={o.id}>• <Link href="/opportunities" style={{ color: 'var(--accent)' }}>{o.title}</Link></li>)}
                   </ul>
-                ) : <p className="text-[14px]" style={{ color: 'var(--muted)' }}>No opportunities for this grade.</p>}
+                ) : <p className="text-[13px] sm:text-[14px]" style={{ color: 'var(--muted)' }}>No opportunities for this grade.</p>}
               </div>
             </div>
           </div>

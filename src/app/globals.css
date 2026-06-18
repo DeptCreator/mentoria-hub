@@ -597,15 +597,97 @@ textarea:focus-visible {
   .container-page {
     padding: 0 16px;
   }
-  
+
   .glass {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
-  
+
   .btn-gold {
     padding: 12px 20px;
     font-size: 15px;
+    min-height: 44px;
+  }
+
+  .btn-gold:hover {
+    transform: none;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Larger touch targets for buttons and links */
+  button,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Better spacing for mobile cards */
+  .glass-lg,
+  .glass-xl {
+    border-radius: var(--radius-md);
+  }
+
+  /* Prevent horizontal overflow */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Mobile-friendly table cells */
+  .admin-table th,
+  .admin-table td {
+    white-space: normal;
+  }
+
+  /* Stack table rows on very small screens */
+  @media (max-width: 480px) {
+    .admin-table {
+      display: block;
+    }
+
+    .admin-table thead {
+      display: none;
+    }
+
+    .admin-table tbody,
+    .admin-table tr,
+    .admin-table td {
+      display: block;
+      width: 100%;
+    }
+
+    .admin-table tr {
+      margin-bottom: 12px;
+      padding: 12px;
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+
+    .admin-table td {
+      padding: 6px 0;
+      text-align: left !important;
+    }
+
+    .admin-table td::before {
+      content: attr(data-label);
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+  }
+}
+
+/* iOS safe areas */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
   }
 }
 
