@@ -2,7 +2,7 @@
 -- Run this in Supabase SQL Editor
 
 -- Enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- Profiles table (extends auth.users)
 CREATE TABLE IF NOT EXISTS profiles (
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS profiles (
 
 -- Categories table
 CREATE TABLE IF NOT EXISTS categories (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name TEXT NOT NULL,
     slug TEXT NOT NULL UNIQUE,
     description TEXT,
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS categories (
 
 -- Opportunities table
 CREATE TABLE IF NOT EXISTS opportunities (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     category_id UUID REFERENCES categories(id),
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS opportunities (
 
 -- Courses table
 CREATE TABLE IF NOT EXISTS courses (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     category TEXT NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS courses (
 
 -- Lessons table
 CREATE TABLE IF NOT EXISTS lessons (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     course_id UUID REFERENCES courses(id) ON DELETE CASCADE,
     title TEXT NOT NULL,
     description TEXT,
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS lessons (
 
 -- Enrollments table
 CREATE TABLE IF NOT EXISTS enrollments (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
     course_id UUID REFERENCES courses(id) ON DELETE CASCADE,
     status TEXT DEFAULT 'active' CHECK (status IN ('active', 'completed', 'dropped')),
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS enrollments (
 
 -- Lesson progress table
 CREATE TABLE IF NOT EXISTS lesson_progress (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
     lesson_id UUID REFERENCES lessons(id) ON DELETE CASCADE,
     is_completed BOOLEAN DEFAULT FALSE,
@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS lesson_progress (
 
 -- Saved opportunities table
 CREATE TABLE IF NOT EXISTS saved_opportunities (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
     opportunity_id UUID REFERENCES opportunities(id) ON DELETE CASCADE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS saved_opportunities (
 
 -- Achievements table
 CREATE TABLE IF NOT EXISTS achievements (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT NOT NULL,
     icon TEXT DEFAULT 'trophy',
@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS achievements (
 
 -- User achievements table
 CREATE TABLE IF NOT EXISTS user_achievements (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
     achievement_id UUID REFERENCES achievements(id) ON DELETE CASCADE,
     earned_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS user_achievements (
 
 -- Certificates table
 CREATE TABLE IF NOT EXISTS certificates (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
     course_id UUID REFERENCES courses(id) ON DELETE CASCADE,
     certificate_number TEXT NOT NULL UNIQUE,
@@ -152,6 +152,26 @@ ALTER TABLE lesson_progress ENABLE ROW LEVEL SECURITY;
 ALTER TABLE saved_opportunities ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_achievements ENABLE ROW LEVEL SECURITY;
 ALTER TABLE certificates ENABLE ROW LEVEL SECURITY;
+
+-- Drop existing policies to allow re-runs
+DROP POLICY IF EXISTS "Profiles are viewable by everyone" ON profiles;
+DROP POLICY IF EXISTS "Users can update own profile" ON profiles;
+DROP POLICY IF EXISTS "Users can insert own profile" ON profiles;
+DROP POLICY IF EXISTS "Opportunities are viewable by everyone" ON opportunities;
+DROP POLICY IF EXISTS "Admins can manage opportunities" ON opportunities;
+DROP POLICY IF EXISTS "Courses are viewable by everyone" ON courses;
+DROP POLICY IF EXISTS "Admins can manage courses" ON courses;
+DROP POLICY IF EXISTS "Lessons are viewable by enrolled users" ON lessons;
+DROP POLICY IF EXISTS "Admins can manage lessons" ON lessons;
+DROP POLICY IF EXISTS "Users can view own enrollments" ON enrollments;
+DROP POLICY IF EXISTS "Users can enroll themselves" ON enrollments;
+DROP POLICY IF EXISTS "Users can update own enrollments" ON enrollments;
+DROP POLICY IF EXISTS "Users can view own progress" ON lesson_progress;
+DROP POLICY IF EXISTS "Users can update own progress" ON lesson_progress;
+DROP POLICY IF EXISTS "Users can view own saved opportunities" ON saved_opportunities;
+DROP POLICY IF EXISTS "Users can save opportunities" ON saved_opportunities;
+DROP POLICY IF EXISTS "Users can view own achievements" ON user_achievements;
+DROP POLICY IF EXISTS "Users can view own certificates" ON certificates;
 
 -- Profiles policies
 CREATE POLICY "Profiles are viewable by everyone" ON profiles
@@ -229,14 +249,17 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Triggers
+DROP TRIGGER IF EXISTS update_profiles_updated_at ON profiles;
 CREATE TRIGGER update_profiles_updated_at
     BEFORE UPDATE ON profiles
     FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
+DROP TRIGGER IF EXISTS update_opportunities_updated_at ON opportunities;
 CREATE TRIGGER update_opportunities_updated_at
     BEFORE UPDATE ON opportunities
     FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
+DROP TRIGGER IF EXISTS update_courses_updated_at ON courses;
 CREATE TRIGGER update_courses_updated_at
     BEFORE UPDATE ON courses
     FOR EACH ROW EXECUTE FUNCTION update_updated_at();
@@ -252,6 +275,7 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Trigger on auth.users
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
     AFTER INSERT ON auth.users
     FOR EACH ROW EXECUTE FUNCTION handle_new_user();

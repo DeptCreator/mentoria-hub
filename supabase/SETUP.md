@@ -1,69 +1,47 @@
 # Supabase Setup for Mentoria Hub
 
-## Quick Start
+## Status
 
-You need to run **one SQL file** in Supabase Dashboard to create tables and seed data.
+Migrations applied via Supabase CLI: **2026-06-18**
+- Project: `lczyxcleqedjvrodxlsm`
+- Tables created: profiles, categories, opportunities, courses, lessons, enrollments, lesson_progress, saved_opportunities, achievements, user_achievements, certificates
+- Seed data: 8 categories, 10 opportunities, 5 courses with lessons, 8 achievements
 
-### Step 1: Open Supabase SQL Editor
+## If you need to re-run migrations
+
+### Option 1: Supabase CLI (recommended if already linked)
+
+```bash
+cd D:/mentoria-hub
+npx supabase db push
+```
+
+### Option 2: Supabase Dashboard SQL Editor
 
 1. Go to https://supabase.com/dashboard
-2. Sign in with your account
-3. Select project: `lczyxcleqedjvrodxlsm`
-4. Click **SQL Editor** in the left sidebar
-5. Click **New query**
+2. Select project: `lczyxcleqedjvrodxlsm`
+3. Click **SQL Editor** → **New query**
+4. Open `supabase/full_setup.sql` and copy all contents
+5. Click **Run**
 
-### Step 2: Run the migration
-
-Open `supabase/migrations/003_full_setup.sql` in this project and copy **all** its contents into the SQL Editor. Then click **Run**.
-
-This creates all tables, RLS policies, triggers, and demo data.
-
-### Step 3: Verify env variables
+## Environment variables
 
 Your `.env.local` must contain:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://lczyxcleqedjvrodxlsm.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGci...      # MUST start with eyJhbGci
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGci...           # MUST start with eyJhbGci
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_...
+SUPABASE_SERVICE_ROLE_KEY=sb_secret_...
 OPENAI_API_KEY=sk-...
 ```
 
-**Important:** The anon key must be a JWT starting with `eyJhbGci`. If you see `sb_publishable_...`, that is the wrong key. Get the correct one from:
+Get keys from:
+- Supabase Dashboard → Project Settings → API
 
-Supabase Dashboard → Project Settings → API → Project API keys → `anon public`
-
-### Step 4: Restart the app
-
-After running SQL and fixing `.env.local`:
+## Restart the app
 
 ```bash
 cd D:/mentoria-hub
 npm run build
 npx next start -p 3000
 ```
-
-## Alternative: Apply via Supabase CLI
-
-If you have a Supabase access token, the agent can apply migrations automatically:
-
-```bash
-npx supabase login
-npx supabase link --project-ref lczyxcleqedjvrodxlsm
-npx supabase db push
-```
-
-To let the agent do this for you, provide the access token starting with `sbp_`.
-
-## What the migration creates
-
-- `profiles` — user profiles linked to auth.users
-- `categories` — opportunity categories
-- `opportunities` — competitions, scholarships, programs
-- `courses` / `lessons` — async courses
-- `enrollments` / `lesson_progress` — student progress
-- `saved_opportunities` — favorites
-- `achievements` / `user_achievements` — gamification
-- `certificates` — course completion certificates
-- Row Level Security (RLS) policies
-- Triggers for new user signup
