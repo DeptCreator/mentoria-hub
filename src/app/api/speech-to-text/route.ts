@@ -22,9 +22,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ text: transcription.text });
   } catch (error: any) {
     console.error('Speech-to-text error:', error);
+    const message = error?.message || 'Failed to transcribe audio';
+    const status = error?.status || 500;
     return NextResponse.json(
-      { error: 'Failed to transcribe audio' },
-      { status: 500 }
+      { error: message },
+      { status }
     );
   }
 }

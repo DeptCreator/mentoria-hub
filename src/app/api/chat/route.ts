@@ -7,7 +7,15 @@ const openai = new OpenAI({
 
 export async function POST(request: Request) {
   try {
+    if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your-openai-key') {
+      return NextResponse.json({ error: 'OpenAI API key is not configured' }, { status: 500 });
+    }
+
     const { messages, profile } = await request.json();
+
+    if (!messages || !Array.isArray(messages)) {
+      return NextResponse.json({ error: 'Messages are required' }, { status: 400 });
+    }
 
     const systemPrompt = `You are Jarvis, an AI education assistant for Mentoria Hub. You help students find educational opportunities, courses, and provide guidance.
 
