@@ -8,12 +8,13 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="px-3 py-1.5 rounded-[20px] text-sm font-medium transition-all cursor-pointer font-sans"
-      style={{ background: 'transparent', color: 'var(--fg-dim)', border: 'none', fontSize: '16px', lineHeight: '1' }}
+      className="w-10 h-10 rounded-full flex items-center justify-center text-[18px] cursor-pointer transition-all"
+      style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+      onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--border-strong)'; }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; }}
       aria-label="Toggle theme"
-      title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
     >
-      {theme === 'dark' ? '☀' : '🌙'}
+      {theme === 'dark' ? '☀️' : '🌙'}
     </button>
   );
 }

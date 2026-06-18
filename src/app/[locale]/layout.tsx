@@ -10,18 +10,19 @@ import '@/app/globals.css';
 
 export default async function LocaleLayout({
   children,
-  params
+  params,
 }: {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  if (!routing.locales.includes(locale as any)) notFound();
-
+  if (!routing.locales.includes(locale as any)) {
+    notFound();
+  }
   const messages = await getMessages();
 
   return (
-    <html lang={locale} data-theme="light" suppressHydrationWarning>
+    <html lang={locale} data-theme="dark" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -32,7 +33,7 @@ export default async function LocaleLayout({
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
             <Navbar />
-            <main className="min-h-screen animate-fadeIn">
+            <main className="min-h-screen">
               {children}
             </main>
             <Footer />

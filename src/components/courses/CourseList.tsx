@@ -13,23 +13,45 @@ export default function CourseList() {
     await enroll(user.id, courseId);
   };
 
-  if (loading) return <div className="py-10 text-center">Loading courses...</div>;
-  if (error) return <div className="py-10 text-center text-red-600">Error: {error}</div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}><p style={{ color: 'var(--fg-dim)' }}>Loading...</p></div>;
+  if (error) return <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}><p style={{ color: '#dc7864' }}>{error}</p></div>;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
-      <h1 className="mb-8 text-3xl font-bold text-gray-900 dark:text-white">Mentoria Courses</h1>
-      
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {courses.map((course) => (
-          <CourseCard
-            key={course.id}
-            course={course}
-            isEnrolled={isEnrolled(course.id)}
-            progress={getEnrollment(course.id)?.progress_percent}
-            onEnroll={() => handleEnroll(course.id)}
-          />
-        ))}
+    <div className="min-h-screen pt-[100px] px-6 pb-16" style={{ background: 'var(--bg)' }}>
+      <div className="max-w-[1200px] mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
+          <div>
+            <h2 className="font-display text-[clamp(2rem,4vw,3rem)] font-bold" style={{ color: 'var(--fg)' }}>Courses</h2>
+            <p style={{ color: 'var(--fg-dim)' }}>Self-paced learning with video lessons and quizzes</p>
+          </div>
+          <div className="flex gap-2">
+            {['All', 'Design', 'Development', 'Business'].map(tab => (
+              <button key={tab} className="tag-pill selected" style={{ fontSize: '13px', padding: '6px 14px' }}>
+                {tab}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Grid */}
+        {courses.length > 0 ? (
+          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            {courses.map(course => (
+              <CourseCard
+                key={course.id}
+                course={course}
+                isEnrolled={isEnrolled(course.id)}
+                progress={getEnrollment(course.id)?.progress_percent}
+                onEnroll={() => handleEnroll(course.id)}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="glass p-12 text-center" style={{ borderRadius: 'var(--radius-lg)' }}>
+            <p style={{ color: 'var(--fg-dim)' }}>No courses available yet.</p>
+          </div>
+        )}
       </div>
     </div>
   );

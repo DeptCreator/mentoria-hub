@@ -18,59 +18,40 @@ export default function HeroSection() {
         <span className="font-display text-[clamp(6rem,18vw,14rem)] font-black" style={{ color: 'var(--fg)' }}>MENTORIA</span>
       </div>
 
-      {/* Glass hero card */}
-      <div className="relative z-10 w-full max-w-[720px] mx-auto px-6 py-12 text-center"
-        style={{
-          background: 'var(--surface)',
-          backdropFilter: 'blur(var(--glass-blur))',
-          WebkitBackdropFilter: 'blur(var(--glass-blur))',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-xl)',
-        }}>
-        <div className="text-[13px] font-semibold uppercase tracking-[0.15em] mb-4" style={{ color: 'var(--accent)' }}>
-          Educational Platform
+      {/* Content */}
+      <div className="relative z-10 text-center px-6 max-w-[800px] mx-auto">
+        <div className="glass glass-xl p-10 md:p-14 animate-fadeIn">
+          <h1 className="font-display text-[clamp(2.5rem,5vw,4rem)] font-bold leading-[1.1] mb-4" style={{ color: 'var(--fg)' }}>
+            Discover Your<br />
+            <span style={{ color: 'var(--accent)' }}>Educational Path</span>
+          </h1>
+          <p className="text-[18px] mb-8 leading-relaxed" style={{ color: 'var(--fg-dim)' }}>
+            Find competitions, scholarships, and courses tailored to your goals. 
+            Learn at your own pace with AI-powered guidance.
+          </p>
+          <div className="flex gap-4 justify-center flex-wrap">
+            <Link
+              href="/opportunities"
+              className="btn-gold inline-flex items-center gap-2 no-underline"
+            >
+              Find Opportunities →
+            </Link>
+            <Link
+              href="/courses"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-[14px] font-semibold no-underline transition-all"
+              style={{ background: 'transparent', color: 'var(--fg)', border: '1.5px solid var(--border-strong)' }}
+            >
+              Start Learning
+            </Link>
+          </div>
         </div>
-        <h1 className="font-display text-[clamp(2.8rem,7vw,5rem)] font-black leading-[0.9] tracking-tight mb-3" style={{ color: 'var(--fg)' }}>
-          Discover Your<br />Educational Path
-        </h1>
-        <p className="font-display text-[clamp(1.2rem,2.5vw,1.8rem)] italic mb-8" style={{ color: 'var(--fg-dim)' }}>
-          Curated opportunities, structured courses, and AI‑powered guidance — all in one place.
-        </p>
-        <div className="flex gap-3.5 flex-wrap justify-center">
-          <Link
-            href="/opportunities"
-            className="inline-flex items-center gap-2 rounded-full px-8 py-[14px] text-[15px] font-semibold no-underline transition-all font-sans"
-            style={{
-              background: 'var(--accent)',
-              color: '#0a0a0f',
-              boxShadow: '0 0 40px var(--accent-glow)',
-            }}
-            onMouseOver={e => { e.currentTarget.style.filter = 'brightness(1.15)'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 50px var(--accent-glow)'; }}
-            onMouseOut={e => { e.currentTarget.style.filter = ''; e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 0 40px var(--accent-glow)'; }}
-          >
-            Find Opportunities
-          </Link>
-          <Link
-            href="/courses"
-            className="inline-flex items-center gap-2 rounded-full px-8 py-[14px] text-[15px] font-semibold no-underline transition-all font-sans"
-            style={{
-              background: 'transparent',
-              color: 'var(--fg)',
-              border: '1.5px solid var(--border-strong)',
-            }}
-            onMouseOver={e => { e.currentTarget.style.background = 'var(--surface)'; e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }}
-            onMouseOut={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'var(--border-strong)'; e.currentTarget.style.color = 'var(--fg)'; }}
-          >
-            Start Learning
-          </Link>
-        </div>
-      </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2" style={{ opacity: 0.6 }}>
-        <span className="text-[12px] tracking-[0.08em] uppercase font-sans" style={{ color: 'var(--fg-dim)' }}>Scroll</span>
-        <div className="w-5 h-8 rounded-full flex justify-center pt-1.5" style={{ border: '1.5px solid var(--border-strong)' }}>
-          <div className="w-[3px] h-2 rounded-full" style={{ background: 'var(--fg)', animation: 'scrollDot 1.8s ease-in-out infinite' }} />
+        {/* Scroll indicator */}
+        <div className="mt-12 flex flex-col items-center gap-2" style={{ animation: 'scrollDot 2s infinite' }}>
+          <div className="w-6 h-10 rounded-full border-2 flex items-start justify-center pt-2" style={{ borderColor: 'var(--border-strong)' }}>
+            <div className="w-1 h-2 rounded-full" style={{ background: 'var(--accent)' }} />
+          </div>
+          <span className="text-[12px] uppercase tracking-wider" style={{ color: 'var(--muted)' }}>Scroll</span>
         </div>
       </div>
     </section>

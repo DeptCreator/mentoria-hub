@@ -3,7 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ===========================================================
-   DESIGN TOKENS — Mentoria Hub Cinematic (from Open Design)
+   DESIGN TOKENS — Mentoria Hub (from Open Design screenshots)
    =========================================================== */
 :root {
   --bg: #0a0a0f;
@@ -113,3 +113,323 @@ body {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+/* ===========================================================
+   NEW: Sidebar + Dashboard Layout
+   =========================================================== */
+.sidebar-nav {
+  width: 260px;
+  min-height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--fg-dim);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sidebar-nav-item:hover {
+  background: var(--surface);
+  color: var(--fg);
+}
+
+.sidebar-nav-item.active {
+  background: var(--surface);
+  color: var(--accent);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.sidebar-nav-item svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.main-content {
+  margin-left: 260px;
+  min-height: 100vh;
+}
+
+@media (max-width: 1024px) {
+  .sidebar-nav { display: none; }
+  .main-content { margin-left: 0; }
+}
+
+/* ===========================================================
+   NEW: Status Badges
+   =========================================================== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-green {
+  background: rgba(99, 179, 136, 0.15);
+  color: #63b388;
+}
+
+.badge-blue {
+  background: rgba(130, 160, 220, 0.15);
+  color: #82a0dc;
+}
+
+.badge-gold {
+  background: rgba(201, 169, 110, 0.15);
+  color: var(--accent);
+}
+
+.badge-coral {
+  background: rgba(220, 120, 100, 0.15);
+  color: #dc7864;
+}
+
+/* ===========================================================
+   NEW: Progress Bar
+   =========================================================== */
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+/* ===========================================================
+   NEW: Card Hover
+   =========================================================== */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-strong);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+/* ===========================================================
+   NEW: Gold Button
+   =========================================================== */
+.btn-gold {
+  background: var(--accent);
+  color: #0a0a0f;
+  border: none;
+  border-radius: 100px;
+  padding: 10px 24px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 30px var(--accent-glow);
+}
+
+.btn-gold:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 50px var(--accent-glow);
+}
+
+/* ===========================================================
+   NEW: Table Row Card
+   =========================================================== */
+.table-row-card {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
+}
+
+.table-row-card:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-hover);
+}
+
+/* ===========================================================
+   NEW: Chat Bubbles
+   =========================================================== */
+.chat-bubble-user {
+  background: var(--accent);
+  color: #0a0a0f;
+  padding: 12px 16px;
+  border-radius: 16px 16px 4px 16px;
+  max-width: 80%;
+  align-self: flex-end;
+  font-size: 14px;
+}
+
+.chat-bubble-ai {
+  background: var(--surface);
+  color: var(--fg);
+  padding: 12px 16px;
+  border-radius: 16px 16px 16px 4px;
+  max-width: 80%;
+  align-self: flex-start;
+  font-size: 14px;
+  border: 1px solid var(--border);
+}
+
+/* ===========================================================
+   NEW: Stepper
+   =========================================================== */
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.step-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.step-circle.completed {
+  background: var(--accent);
+  color: #0a0a0f;
+}
+
+.step-circle.active {
+  background: var(--surface);
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.step-circle.pending {
+  background: var(--surface);
+  color: var(--muted);
+  border: 2px solid var(--border);
+}
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  transition: all 0.3s ease;
+}
+
+.step-line.completed {
+  background: var(--accent);
+}
+
+/* ===========================================================
+   NEW: Timeline
+   =========================================================== */
+.timeline-node {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.timeline-node.active {
+  background: var(--accent);
+  color: #0a0a0f;
+  box-shadow: 0 0 30px var(--accent-glow);
+}
+
+.timeline-node.completed {
+  background: #63b388;
+  color: #0a0a0f;
+}
+
+.timeline-node.pending {
+  background: var(--surface);
+  color: var(--muted);
+  border: 2px solid var(--border);
+}
+
+/* ===========================================================
+   NEW: Tag Pills
+   =========================================================== */
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1.5px solid var(--border);
+  color: var(--fg-dim);
+  background: transparent;
+}
+
+.tag-pill:hover {
+  border-color: var(--border-strong);
+  color: var(--fg);
+}
+
+.tag-pill.selected {
+  background: var(--accent);
+  color: #0a0a0f;
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+/* ===========================================================
+   NEW: Premium Glow
+   =========================================================== */
+.premium-glow {
+  box-shadow: 0 0 40px var(--accent-glow), inset 0 0 40px rgba(201,169,110,0.05);
+}
+
+/* ===========================================================
+   NEW: Icon Background
+   =========================================================== */
+.icon-bg {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}

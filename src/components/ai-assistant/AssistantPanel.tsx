@@ -12,163 +12,184 @@ interface Props {
 export default function AssistantPanel({ isOpen, onClose }: Props) {
   const { profile } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'assistant', content: "Hello! I'm Jarvis, your AI assistant. Ask me anything about courses, opportunities, or your learning path.", timestamp: Date.now() }
+    { role: 'assistant', content: "Hello! I'm Jarvis, your AI assistant. Ask me anything about courses, opportunities, or your academic path!", timestamp: Date.now() }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
 
-  const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  useEffect(() => { scrollToBottom(); }, [messages]);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
-  const sendMessage = async (text: string) => {
-    if (!text.trim()) return;
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
-    const userMessage: ChatMessage = { role: 'user', content: text, timestamp: Date.now() };
-    setMessages(prev => [...prev, userMessage]);
+  const sendMessage = async () => {
+    if (!input.trim() || loading) return;
+
+    const userMsg: ChatMessage = { role: 'user', content: input, timestamp: Date.now() };
+    setMessages(prev => [...prev, userMsg]);
     setInput('');
     setLoading(true);
 
     try {
-      const response = await fetch('/api/chat', {
+      const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: [...messages, userMessage].map(m => ({ role: m.role, content: m.content })),
-          profile,
-        }),
+          messages: [...messages, userMsg],
+          profile: { interests: profile?.interests, goals: profile?.goals, grade: profile?.grade }
+        })
       });
 
-      const data = await response.json();
-      const assistantMessage: ChatMessage = {
-        role: 'assistant',
-        content: data.message || 'Sorry, I could not process your request.',
-        timestamp: Date.now(),
-      };
-      setMessages(prev => [...prev, assistantMessage]);
-    } catch (error) {
-      console.error('Chat error:', error);
+      const data = await res.json();
+      setMessages(prev => [...prev, { role: 'assistant', content: data.response || 'Sorry, I had trouble responding.', timestamp: Date.now() }]);
+    } catch (err) {
+      setMessages(prev => [...prev, { role: 'assistant', content: 'Network error. Please try again.', timestamp: Date.now() }]);
     } finally {
       setLoading(false);
     }
   };
 
-  const startRecording = async () => {
+  const handleVoice = async () => {
+    if (!navigator.mediaDevices) {
+      alert('Voice recording not supported in this browser.');
+      return;
+    }
+
+    setIsRecording(true);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      audioChunksRef.current = [];
+      const chunks: Blob[] = [];
 
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) audioChunksRef.current.push(event.data);
-      };
-
+      mediaRecorder.ondataavailable = e => chunks.push(e.data);
       mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const blob = new Blob(chunks, { type: 'audio/webm' });
         const formData = new FormData();
-        formData.append('audio', audioBlob, 'recording.webm');
+        formData.append('audio', blob);
 
-        try {
-          setLoading(true);
-          const response = await fetch('/api/speech-to-text', { method: 'POST', body: formData });
-          const data = await response.json();
-          if (data.text) sendMessage(data.text);
-        } catch (err) {
-          console.error('Transcription error:', err);
-        } finally {
-          setLoading(false);
+        // Transcribe
+        const whisperRes = await fetch('/api/whisper', { method: 'POST', body: formData });
+        const whisperData = await whisperRes.json();
+        const transcript = whisperData.text || '';
+
+        if (transcript) {
+          setMessages(prev => [...prev, { role: 'user', content: transcript, timestamp: Date.now() }]);
+          // Get AI response
+          const chatRes = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              messages: [...messages, { role: 'user', content: transcript, timestamp: Date.now() }],
+              profile: { interests: profile?.interests, goals: profile?.goals, grade: profile?.grade }
+            })
+          });
+          const chatData = await chatRes.json();
+          const aiResponse = chatData.response || 'Sorry, I had trouble responding.';
+          setMessages(prev => [...prev, { role: 'assistant', content: aiResponse, timestamp: Date.now() }]);
+
+          // Text-to-speech
+          const ttsRes = await fetch('/api/tts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: aiResponse })
+          });
+          const ttsData = await ttsRes.json();
+          if (ttsData.audio) {
+            const audio = new Audio(`data:audio/mp3;base64,${ttsData.audio}`);
+            audio.play();
+          }
         }
-        stream.getTracks().forEach(track => track.stop());
+
+        setIsRecording(false);
+        stream.getTracks().forEach(t => t.stop());
       };
 
       mediaRecorder.start();
-      setIsRecording(true);
-    } catch (error) {
-      console.error('Recording error:', error);
-      alert('Could not access microphone. Please check permissions.');
+      setTimeout(() => mediaRecorder.stop(), 5000);
+    } catch (err) {
+      console.error('Voice error:', err);
+      setIsRecording(false);
     }
-  };
-
-  const stopRecording = () => {
-    mediaRecorderRef.current?.stop();
-    setIsRecording(false);
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="chat-panel fixed bottom-[100px] right-7 z-[199] flex flex-col overflow-hidden"
-      style={{
-        width: '380px',
-        maxWidth: 'calc(100vw - 40px)',
-        height: '480px',
-        maxHeight: 'calc(100vh - 140px)',
-        background: 'var(--bg-alt)',
-        border: '1px solid var(--border-strong)',
-        borderRadius: 'var(--radius-lg)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
-      }}>
+    <div className="fixed bottom-24 right-6 z-[200] w-[380px] max-w-[calc(100vw-48px)] glass glass-xl flex flex-col"
+      style={{ height: '520px', boxShadow: '0 20px 60px rgba(0,0,0,0.5)' }}
+    >
       {/* Header */}
-      <div className="flex items-center justify-between px-[18px] py-[14px]" style={{ borderBottom: '1px solid var(--border)' }}>
-        <span className="font-bold" style={{ color: 'var(--fg)' }}>Jarvis AI</span>
-        <button onClick={onClose} className="bg-none border-none cursor-pointer text-[18px]" style={{ color: 'var(--fg)', background: 'none', border: 'none' }}>✕</button>
+      <div className="flex items-center justify-between p-4 border-b" style={{ borderColor: 'var(--border)' }}>
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'var(--accent)' }}>
+            <span className="text-[14px]">✨</span>
+          </div>
+          <div>
+            <div className="font-semibold text-[14px]" style={{ color: 'var(--fg)' }}>AI Voice Assistant</div>
+            <div className="text-[11px]" style={{ color: 'var(--muted)' }}>Beta</div>
+          </div>
+        </div>
+        <button onClick={onClose} className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer"
+          style={{ background: 'var(--surface)', color: 'var(--fg-dim)' }}
+        >
+          ✕
+        </button>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2.5" id="chatMessages">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.map((msg, i) => (
-          <div key={i} className={`chat-bubble max-w-[80%] px-4 py-2.5 text-[14px] leading-relaxed ${
-            msg.role === 'user' ? 'self-end' : 'self-start'
-          }`}
-            style={{
-              borderRadius: '18px',
-              ...(msg.role === 'user'
-                ? { background: 'var(--accent)', color: '#0a0a0f', borderBottomRightRadius: '4px' }
-                : { background: 'var(--surface)', color: 'var(--fg)', borderBottomLeftRadius: '4px' }
-              ),
-            }}>
+          <div key={i} className={msg.role === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai'}>
             {msg.content}
           </div>
         ))}
         {loading && (
-          <div className="chat-bubble self-start px-4 py-2.5 text-[14px]" style={{ background: 'var(--surface)', color: 'var(--fg-dim)', borderRadius: '18px', borderBottomLeftRadius: '4px' }}>
-            Thinking...
+          <div className="chat-bubble-ai">
+            <div className="flex gap-1">
+              <span className="w-2 h-2 rounded-full animate-bounce" style={{ background: 'var(--accent)' }} />
+              <span className="w-2 h-2 rounded-full animate-bounce" style={{ background: 'var(--accent)', animationDelay: '0.1s' }} />
+              <span className="w-2 h-2 rounded-full animate-bounce" style={{ background: 'var(--accent)', animationDelay: '0.2s' }} />
+            </div>
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
 
       {/* Input */}
-      <div className="flex gap-2 p-3" style={{ borderTop: '1px solid var(--border)' }}>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && sendMessage(input)}
-          placeholder="Ask Jarvis..."
-          className="flex-1 rounded-full px-4 py-2.5 text-[14px] outline-none font-sans"
-          style={{ border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--fg)' }}
-        />
-        <button
-          onClick={isRecording ? stopRecording : startRecording}
-          className="w-10 h-10 rounded-full border-none cursor-pointer flex items-center justify-center flex-shrink-0 text-[16px] transition-all"
-          style={{ background: isRecording ? '#dc7864' : 'var(--accent)', color: '#0a0a0f' }}
-        >
-          {isRecording ? '■' : '🎤'}
-        </button>
-        <button
-          onClick={() => sendMessage(input)}
-          disabled={!input.trim() || loading}
-          className="w-10 h-10 rounded-full border-none cursor-pointer flex items-center justify-center flex-shrink-0 transition-all disabled:opacity-40"
-          style={{ background: 'var(--accent)', color: '#0a0a0f' }}
-        >
-          ▶
-        </button>
+      <div className="p-4 border-t" style={{ borderColor: 'var(--border)' }}>
+        <div className="flex gap-2">
+          <input
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && sendMessage()}
+            placeholder="Type your message..."
+            className="flex-1 px-4 py-2.5 rounded-full text-[14px] outline-none"
+            style={{ background: 'var(--surface)', color: 'var(--fg)', border: '1px solid var(--border)' }}
+          />
+          <button
+            onClick={sendMessage}
+            className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
+            style={{ background: 'var(--accent)', color: '#0a0a0f' }}
+          >
+            →
+          </button>
+          <button
+            onClick={handleVoice}
+            className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer transition-all"
+            style={{
+              background: isRecording ? '#dc7864' : 'var(--surface)',
+              color: isRecording ? '#fff' : 'var(--fg-dim)',
+              border: '1px solid var(--border)'
+            }}
+          >
+            🎤
+          </button>
+        </div>
       </div>
     </div>
   );

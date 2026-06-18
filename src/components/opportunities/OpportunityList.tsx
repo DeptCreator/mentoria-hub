@@ -9,51 +9,73 @@ import OpportunityFilters from './OpportunityFilters';
 export default function OpportunityList() {
   const { opportunities, loading, error, saveOpportunity, unsaveOpportunity, isSaved, fetchOpportunities } = useOpportunities();
   const { user, isAuthenticated } = useAuth();
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({ category: 'all', grade: 'all', format: 'all' });
 
-  const handleSave = async (opportunityId: string) => {
+  const filtered = opportunities.filter(o => {
+    if (filters.category !== 'all' && o.category !== filters.category) return false;
+    if (filters.grade !== 'all' && (o.grade_min || 0) > parseInt(filters.grade)) return false;
+    if (filters.grade !== 'all' && (o.grade_max || 12) < parseInt(filters.grade)) return false;
+    if (filters.format !== 'all' && o.format !== filters.format) return false;
+    return true;
+  });
+
+  const handleSave = async (oppId: string) => {
     if (!user) return;
-    await saveOpportunity(user.id, opportunityId);
+    await saveOpportunity(user.id, oppId);
   };
 
-  const handleUnsave = async (opportunityId: string) => {
+  const handleUnsave = async (oppId: string) => {
     if (!user) return;
-    await unsaveOpportunity(user.id, opportunityId);
+    await unsaveOpportunity(user.id, oppId);
   };
 
-  const handleFilterChange = (newFilters: any) => {
-    setFilters(newFilters);
-    fetchOpportunities(newFilters);
-  };
-
-  if (loading) return <div className="py-20 text-center text-[var(--fg-muted)]">Loading opportunities...</div>;
-  if (error) return <div className="py-20 text-center text-[var(--danger)]">Error: {error}</div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}><p style={{ color: 'var(--fg-dim)' }}>Loading...</p></div>;
+  if (error) return <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}><p style={{ color: '#dc7864' }}>{error}</p></div>;
 
   return (
-    <div className="container-page">
-      <div className="grid grid-cols-[260px_1fr] gap-8 py-10 max-lg:grid-cols-1">
-        <div className="max-lg:static">
-          <OpportunityFilters filters={filters} onChange={handleFilterChange} />
+    <div className="min-h-screen pt-[100px] px-6 pb-16" style={{ background: 'var(--bg)' }}>
+      <div className="max-w-[1200px] mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
+          <div>
+            <h2 className="font-display text-[clamp(2rem,4vw,3rem)] font-bold" style={{ color: 'var(--fg)' }}>Educational Opportunities</h2>
+            <p style={{ color: 'var(--fg-dim)' }}>Find competitions, scholarships, and internships</p>
+          </div>
+          <div className="flex gap-2">
+            {['All', 'Competitions', 'Scholarships', 'Internships'].map(tab => (
+              <button key={tab} className="tag-pill selected" style={{ fontSize: '13px', padding: '6px 14px' }}>
+                {tab}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-5 content-start">
-          {opportunities.map((opportunity) => (
-            <OpportunityCard
-              key={opportunity.id}
-              opportunity={opportunity}
-              isSaved={isSaved(opportunity.id)}
-              onSave={() => handleSave(opportunity.id)}
-              onUnsave={() => handleUnsave(opportunity.id)}
-            />
-          ))}
+        <div className="flex gap-6 flex-col lg:flex-row">
+          {/* Sidebar Filters */}
+          <aside className="lg:w-[260px] flex-shrink-0">
+            <OpportunityFilters filters={filters} onChange={setFilters} />
+          </aside>
 
-          {opportunities.length === 0 && (
-            <div className="col-span-full text-center py-20 text-[var(--fg-muted)]">
-              <div className="text-[48px] mb-4">🔍</div>
-              <h3 className="text-[20px] text-[var(--fg-secondary)] mb-2">No opportunities found</h3>
-              <p className="text-[14px]">Try adjusting your filters.</p>
-            </div>
-          )}
+          {/* Grid */}
+          <div className="flex-1">
+            {filtered.length > 0 ? (
+              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                {filtered.map(opp => (
+                  <OpportunityCard
+                    key={opp.id}
+                    opportunity={opp}
+                    isSaved={isSaved(opp.id)}
+                    onSave={() => handleSave(opp.id)}
+                    onUnsave={() => handleUnsave(opp.id)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="glass p-12 text-center" style={{ borderRadius: 'var(--radius-lg)' }}>
+                <p style={{ color: 'var(--fg-dim)' }}>No opportunities match your filters.</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
