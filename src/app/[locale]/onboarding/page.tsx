@@ -6,160 +6,113 @@ import { useRouter } from 'next/navigation';
 import { INTERESTS, GOALS, GRADES } from '@/lib/constants';
 
 export default function OnboardingPage() {
-  const { user, updateProfile } = useAuth();
+  const { updateProfile } = useAuth();
   const router = useRouter();
-  const [step, setStep] = useState(1);
-  const [grade, setGrade] = useState(9);
+  const [step, setStep] = useState(0);
+  const [grade, setGrade] = useState(0);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [selectedGoals, setSelectedGoals] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const toggleInterest = (interest: string) => {
-    setSelectedInterests(prev =>
-      prev.includes(interest)
-        ? prev.filter(i => i !== interest)
-        : [...prev, interest]
-    );
+  const steps = [
+    { title: "What's your grade?", sub: "We'll tailor recommendations for you.", render: () => (
+      <div className="flex flex-wrap gap-2.5 justify-center">
+        {GRADES.map(g => (
+          <button key={g} onClick={() => setGrade(g)}
+            className="tag-pill rounded-full px-5 py-3 text-[15px] font-medium border-2 cursor-pointer transition-all font-sans"
+            style={{
+              borderColor: grade === g ? 'var(--accent)' : 'var(--border)',
+              background: grade === g ? 'var(--accent)' : 'transparent',
+              color: grade === g ? '#0a0a0f' : 'var(--fg-dim)',
+            }}>Grade {g}</button>
+        ))}
+      </div>
+    )},
+    { title: 'What interests you?', sub: 'Pick as many as you like.', render: () => (
+      <div className="flex flex-wrap gap-2.5 justify-center">
+        {INTERESTS.map(i => (
+          <button key={i} onClick={() => setSelectedInterests(p => p.includes(i) ? p.filter(x => x !== i) : [...p, i])}
+            className="tag-pill rounded-full px-5 py-3 text-[15px] font-medium border-2 cursor-pointer transition-all font-sans"
+            style={{
+              borderColor: selectedInterests.includes(i) ? 'var(--accent)' : 'var(--border)',
+              background: selectedInterests.includes(i) ? 'var(--accent)' : 'transparent',
+              color: selectedInterests.includes(i) ? '#0a0a0f' : 'var(--fg-dim)',
+              fontWeight: selectedInterests.includes(i) ? 600 : 500,
+            }}>{i}</button>
+        ))}
+      </div>
+    )},
+    { title: 'What are your goals?', sub: 'Select up to 3.', render: () => (
+      <div className="flex flex-wrap gap-2.5 justify-center">
+        {GOALS.map(g => (
+          <button key={g} onClick={() => setSelectedGoals(p => p.includes(g) ? p.filter(x => x !== g) : p.length < 3 ? [...p, g] : p)}
+            className="tag-pill rounded-full px-5 py-3 text-[15px] font-medium border-2 cursor-pointer transition-all font-sans"
+            style={{
+              borderColor: selectedGoals.includes(g) ? 'var(--accent)' : 'var(--border)',
+              background: selectedGoals.includes(g) ? 'var(--accent)' : 'transparent',
+              color: selectedGoals.includes(g) ? '#0a0a0f' : 'var(--fg-dim)',
+              fontWeight: selectedGoals.includes(g) ? 600 : 500,
+            }}>{g}</button>
+        ))}
+      </div>
+    )},
+  ];
+
+  const canProceed = () => {
+    if (step === 0) return grade > 0;
+    if (step === 1) return selectedInterests.length > 0;
+    if (step === 2) return selectedGoals.length > 0;
+    return false;
   };
 
-  const toggleGoal = (goal: string) => {
-    setSelectedGoals(prev =>
-      prev.includes(goal)
-        ? prev.filter(g => g !== goal)
-        : [...prev, goal]
-    );
+  const handleNext = () => {
+    if (step < steps.length - 1) setStep(step + 1);
+    else handleComplete();
   };
 
   const handleComplete = async () => {
     setLoading(true);
-    await updateProfile({
-      grade,
-      interests: selectedInterests,
-      goals: selectedGoals,
-    });
+    await updateProfile({ grade, interests: selectedInterests, goals: selectedGoals });
     setLoading(false);
     router.push('/dashboard');
   };
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-12">
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Welcome to Mentoria Hub</h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">Let's personalize your experience</p>
-      </div>
+    <div className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--bg)' }}>
+      <div className="glass glass-xl max-w-[520px] w-full p-12 text-center">
+        {/* Dots */}
+        <div className="flex justify-center gap-2.5 mb-7">
+          {steps.map((_, i) => (
+            <span key={i} className="h-2.5 rounded transition-all"
+              style={{
+                width: i === step ? '28px' : '10px',
+                background: i <= step ? 'var(--accent)' : 'var(--border)',
+                borderRadius: i === step ? '5px' : '50%',
+              }} />
+          ))}
+        </div>
 
-      {/* Progress */}
-      <div className="mb-8 flex items-center gap-2">
-        {[1, 2, 3].map(s => (
-          <div
-            key={s}
-            className={`h-2 flex-1 rounded-full ${
-              s <= step ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
-            }`}
-          />
-        ))}
-      </div>
+        {/* Step content */}
+        <h2 className="font-display text-[2rem] font-bold mb-2" style={{ color: 'var(--fg)' }}>{steps[step].title}</h2>
+        <p className="mb-7" style={{ color: 'var(--fg-dim)' }}>{steps[step].sub}</p>
+        {steps[step].render()}
 
-      {step === 1 && (
-        <div className="space-y-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">What grade are you in?</h2>
-          <div className="grid grid-cols-3 gap-4">
-            {GRADES.map(g => (
-              <button
-                key={g}
-                onClick={() => setGrade(g)}
-                className={`rounded-lg border-2 p-4 text-center transition ${
-                  grade === g
-                    ? 'border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300'
-                    : 'border-gray-200 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700'
-                }`}
-              >
-                Grade {g}
-              </button>
-            ))}
-          </div>
-          <button
-            onClick={() => setStep(2)}
-            className="w-full rounded bg-blue-600 px-4 py-3 text-white hover:bg-blue-700"
-          >
-            Continue
+        {/* Navigation */}
+        <div className="flex gap-3 justify-center mt-7">
+          {step > 0 && (
+            <button onClick={() => setStep(step - 1)}
+              className="rounded-full px-6 py-3 text-[15px] font-semibold cursor-pointer font-sans transition-all"
+              style={{ background: 'transparent', color: 'var(--fg)', border: '1.5px solid var(--border-strong)' }}>
+              Back
+            </button>
+          )}
+          <button onClick={handleNext} disabled={!canProceed() || loading}
+            className="rounded-full px-6 py-3 text-[15px] font-semibold cursor-pointer font-sans transition-all disabled:opacity-40"
+            style={{ background: 'var(--accent)', color: '#0a0a0f', boxShadow: '0 0 40px var(--accent-glow)' }}>
+            {loading ? 'Saving...' : step === steps.length - 1 ? 'Finish' : 'Continue'}
           </button>
         </div>
-      )}
-
-      {step === 2 && (
-        <div className="space-y-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">What are you interested in?</h2>
-          <p className="text-sm text-gray-500">Select all that apply</p>
-          <div className="flex flex-wrap gap-2">
-            {INTERESTS.map(interest => (
-              <button
-                key={interest}
-                onClick={() => toggleInterest(interest)}
-                className={`rounded-full border px-4 py-2 text-sm transition ${
-                  selectedInterests.includes(interest)
-                    ? 'border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300'
-                    : 'border-gray-200 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700'
-                }`}
-              >
-                {interest}
-              </button>
-            ))}
-          </div>
-          <div className="flex gap-4">
-            <button
-              onClick={() => setStep(1)}
-              className="flex-1 rounded border border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300"
-            >
-              Back
-            </button>
-            <button
-              onClick={() => setStep(3)}
-              disabled={selectedInterests.length === 0}
-              className="flex-1 rounded bg-blue-600 px-4 py-3 text-white hover:bg-blue-700 disabled:opacity-50"
-            >
-              Continue
-            </button>
-          </div>
-        </div>
-      )}
-
-      {step === 3 && (
-        <div className="space-y-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">What are your goals?</h2>
-          <p className="text-sm text-gray-500">Select all that apply</p>
-          <div className="flex flex-wrap gap-2">
-            {GOALS.map(goal => (
-              <button
-                key={goal}
-                onClick={() => toggleGoal(goal)}
-                className={`rounded-full border px-4 py-2 text-sm transition ${
-                  selectedGoals.includes(goal)
-                    ? 'border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300'
-                    : 'border-gray-200 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700'
-                }`}
-              >
-                {goal}
-              </button>
-            ))}
-          </div>
-          <div className="flex gap-4">
-            <button
-              onClick={() => setStep(2)}
-              className="flex-1 rounded border border-gray-300 px-4 py-3 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300"
-            >
-              Back
-            </button>
-            <button
-              onClick={handleComplete}
-              disabled={selectedGoals.length === 0 || loading}
-              className="flex-1 rounded bg-blue-600 px-4 py-3 text-white hover:bg-blue-700 disabled:opacity-50"
-            >
-              {loading ? 'Saving...' : 'Complete Setup'}
-            </button>
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }

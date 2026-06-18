@@ -4,7 +4,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { supabaseBrowser } from '@/lib/supabase';
-import Link from 'next/link';
 
 export default function AdminPage() {
   const { isAdmin, isLoading, isAuthenticated } = useAuth();
@@ -15,15 +14,11 @@ export default function AdminPage() {
   const [users, setUsers] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!isLoading && !isAdmin) {
-      router.push('/');
-    }
+    if (!isLoading && !isAdmin) router.push('/');
   }, [isLoading, isAdmin, router]);
 
   useEffect(() => {
-    if (isAdmin) {
-      fetchData();
-    }
+    if (isAdmin) fetchData();
   }, [isAdmin, activeTab]);
 
   const fetchData = async () => {
@@ -39,134 +34,97 @@ export default function AdminPage() {
         setUsers(data || []);
       }
     } catch (error) {
-      console.error('Error fetching admin data:', error);
+      console.error('Error:', error);
     }
   };
 
-  if (isLoading) return <div className="p-10 text-center">Loading...</div>;
+  if (isLoading) return <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}><p style={{ color: 'var(--fg-dim)' }}>Loading...</p></div>;
   if (!isAuthenticated || !isAdmin) return null;
 
+  const Badge = ({ level }: { level: string }) => {
+    const colors: Record<string, { bg: string; color: string }> = {
+      beginner: { bg: 'rgba(99,179,136,0.18)', color: '#63b388' },
+      intermediate: { bg: 'rgba(201,169,110,0.18)', color: '#c9a96e' },
+      advanced: { bg: 'rgba(220,120,100,0.18)', color: '#dc7864' },
+    };
+    const c = colors[level] || colors.beginner;
+    return <span className="inline-block rounded-full px-3 py-1 text-[12px] font-semibold uppercase tracking-wide" style={{ background: c.bg, color: c.color }}>{level}</span>;
+  };
+
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
-      <h1 className="mb-8 text-3xl font-bold text-gray-900 dark:text-white">Admin Panel</h1>
+    <div className="min-h-screen pt-[100px] px-6 pb-16" style={{ background: 'var(--bg)' }}>
+      <div className="max-w-[1200px] mx-auto">
+        <div className="flex items-center justify-between flex-wrap gap-4 mb-7">
+          <h2 className="font-display text-[clamp(2rem,4vw,3rem)] font-bold" style={{ color: 'var(--fg)' }}>Admin Panel</h2>
+          <button className="rounded-full px-5 py-2.5 text-[14px] font-semibold cursor-pointer font-sans transition-all"
+            style={{ background: 'var(--accent)', color: '#0a0a0f', boxShadow: '0 0 40px var(--accent-glow)' }}
+            onClick={() => alert('Add new item dialog')}>+ Add New</button>
+        </div>
 
-      {/* Tabs */}
-      <div className="mb-6 flex gap-2 border-b border-gray-200 dark:border-gray-700">
-        {['courses', 'opportunities', 'users'].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 text-sm font-medium capitalize ${
-              activeTab === tab
-                ? 'border-b-2 border-blue-600 text-blue-600'
-                : 'text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
+        {/* Tabs */}
+        <div className="flex gap-1 mb-6 flex-wrap">
+          {['courses', 'opportunities', 'users'].map(tab => (
+            <button key={tab} onClick={() => setActiveTab(tab)}
+              className="px-4 py-2 rounded-[20px] text-sm font-medium cursor-pointer transition-all font-sans"
+              style={{
+                background: activeTab === tab ? 'var(--surface)' : 'transparent',
+                color: activeTab === tab ? 'var(--accent)' : 'var(--fg-dim)',
+                fontWeight: activeTab === tab ? 600 : 500,
+                border: 'none',
+              }}>{tab.charAt(0).toUpperCase() + tab.slice(1)}</button>
+          ))}
+        </div>
+
+        {/* Table */}
+        <div className="glass overflow-x-auto" style={{ borderRadius: 'var(--radius-lg)' }}>
+          <table className="admin-table w-full border-collapse">
+            <thead>
+              <tr>
+                <th className="text-left px-4 py-3 text-[12px] uppercase tracking-wider" style={{ color: 'var(--muted)', borderBottom: '1px solid var(--border)' }}>Title</th>
+                <th className="text-left px-4 py-3 text-[12px] uppercase tracking-wider" style={{ color: 'var(--muted)', borderBottom: '1px solid var(--border)' }}>Category</th>
+                <th className="text-left px-4 py-3 text-[12px] uppercase tracking-wider" style={{ color: 'var(--muted)', borderBottom: '1px solid var(--border)' }}>Status</th>
+                <th className="text-right px-4 py-3 text-[12px] uppercase tracking-wider" style={{ color: 'var(--muted)', borderBottom: '1px solid var(--border)' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {activeTab === 'courses' && courses.map(c => (
+                <tr key={c.id}>
+                  <td className="px-4 py-3.5 text-[14px]" style={{ color: 'var(--fg)', borderBottom: '1px solid var(--border)' }}>{c.title}</td>
+                  <td className="px-4 py-3.5 text-[14px]" style={{ borderBottom: '1px solid var(--border)' }}><Badge level={c.level} /></td>
+                  <td className="px-4 py-3.5 text-[14px]" style={{ color: '#63b388', borderBottom: '1px solid var(--border)' }}>Active</td>
+                  <td className="px-4 py-3.5 text-right" style={{ borderBottom: '1px solid var(--border)' }}>
+                    <button className="rounded-full px-3 py-1 text-[12px] font-medium cursor-pointer mr-2 transition-all font-sans" style={{ background: 'transparent', color: 'var(--fg)', border: '1px solid var(--border-strong)' }}>Edit</button>
+                    <button className="rounded-full px-3 py-1 text-[12px] font-medium cursor-pointer transition-all font-sans" style={{ background: 'transparent', color: '#dc7864', border: '1px solid rgba(220,120,100,0.3)' }}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+              {activeTab === 'opportunities' && opportunities.map(o => (
+                <tr key={o.id}>
+                  <td className="px-4 py-3.5 text-[14px]" style={{ color: 'var(--fg)', borderBottom: '1px solid var(--border)' }}>{o.title}</td>
+                  <td className="px-4 py-3.5 text-[14px]" style={{ color: 'var(--fg-dim)', borderBottom: '1px solid var(--border)' }}>{o.category}</td>
+                  <td className="px-4 py-3.5 text-[14px]" style={{ color: '#63b388', borderBottom: '1px solid var(--border)' }}>Active</td>
+                  <td className="px-4 py-3.5 text-right" style={{ borderBottom: '1px solid var(--border)' }}>
+                    <button className="rounded-full px-3 py-1 text-[12px] font-medium cursor-pointer mr-2 transition-all font-sans" style={{ background: 'transparent', color: 'var(--fg)', border: '1px solid var(--border-strong)' }}>Edit</button>
+                    <button className="rounded-full px-3 py-1 text-[12px] font-medium cursor-pointer transition-all font-sans" style={{ background: 'transparent', color: '#dc7864', border: '1px solid rgba(220,120,100,0.3)' }}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+              {activeTab === 'users' && users.map(u => (
+                <tr key={u.id}>
+                  <td className="px-4 py-3.5 text-[14px]" style={{ color: 'var(--fg)', borderBottom: '1px solid var(--border)' }}>{u.email}</td>
+                  <td className="px-4 py-3.5 text-[14px]" style={{ color: 'var(--fg-dim)', borderBottom: '1px solid var(--border)' }}><Badge level={u.is_admin ? 'advanced' : 'beginner'} /></td>
+                  <td className="px-4 py-3.5 text-[14px]" style={{ color: u.is_admin ? '#c9a96e' : '#63b388', borderBottom: '1px solid var(--border)' }}>{u.is_admin ? 'Admin' : 'Active'}</td>
+                  <td className="px-4 py-3.5 text-right" style={{ borderBottom: '1px solid var(--border)' }}>
+                    <button className="rounded-full px-3 py-1 text-[12px] font-medium cursor-pointer mr-2 transition-all font-sans" style={{ background: 'transparent', color: 'var(--fg)', border: '1px solid var(--border-strong)' }}>Edit</button>
+                    <button className="rounded-full px-3 py-1 text-[12px] font-medium cursor-pointer transition-all font-sans" style={{ background: 'transparent', color: '#dc7864', border: '1px solid rgba(220,120,100,0.3)' }}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+              {activeTab === 'courses' && courses.length === 0 && <tr><td colSpan={4} className="px-4 py-10 text-center text-[14px]" style={{ color: 'var(--muted)' }}>No data yet. Run Supabase migrations first.</td></tr>}
+            </tbody>
+          </table>
+        </div>
       </div>
-
-      {/* Content */}
-      {activeTab === 'courses' && (
-        <div>
-          <div className="mb-4 flex justify-between">
-            <h2 className="text-xl font-semibold">Courses</h2>
-            <button className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
-              Add Course
-            </button>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full rounded-lg border border-gray-200 dark:border-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-800">
-                <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Title</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Category</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Level</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                {courses.map((course: any) => (
-                  <tr key={course.id}>
-                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{course.title}</td>
-                    <td className="px-4 py-3 text-sm text-gray-500">{course.category}</td>
-                    <td className="px-4 py-3 text-sm text-gray-500">{course.level}</td>
-                    <td className="px-4 py-3 text-sm">
-                      <button className="mr-2 text-blue-600 hover:underline">Edit</button>
-                      <button className="text-red-600 hover:underline">Delete</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {activeTab === 'opportunities' && (
-        <div>
-          <div className="mb-4 flex justify-between">
-            <h2 className="text-xl font-semibold">Opportunities</h2>
-            <button className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
-              Add Opportunity
-            </button>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full rounded-lg border border-gray-200 dark:border-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-800">
-                <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Title</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Category</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Deadline</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                {opportunities.map((opp: any) => (
-                  <tr key={opp.id}>
-                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{opp.title}</td>
-                    <td className="px-4 py-3 text-sm text-gray-500">{opp.category}</td>
-                    <td className="px-4 py-3 text-sm text-gray-500">{opp.deadline || 'N/A'}</td>
-                    <td className="px-4 py-3 text-sm">
-                      <button className="mr-2 text-blue-600 hover:underline">Edit</button>
-                      <button className="text-red-600 hover:underline">Delete</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {activeTab === 'users' && (
-        <div>
-          <h2 className="mb-4 text-xl font-semibold">Users</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full rounded-lg border border-gray-200 dark:border-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-800">
-                <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Email</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Name</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Grade</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Admin</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                {users.map((user: any) => (
-                  <tr key={user.id}>
-                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{user.email}</td>
-                    <td className="px-4 py-3 text-sm text-gray-500">{user.full_name || 'N/A'}</td>
-                    <td className="px-4 py-3 text-sm text-gray-500">{user.grade || 'N/A'}</td>
-                    <td className="px-4 py-3 text-sm text-gray-500">{user.is_admin ? 'Yes' : 'No'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

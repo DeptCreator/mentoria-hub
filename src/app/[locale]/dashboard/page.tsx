@@ -5,7 +5,6 @@ import { useOpportunities } from '@/hooks/useOpportunities';
 import { useCourses } from '@/hooks/useCourses';
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { Bookmark, BookOpen, Trophy, Award, Calendar } from 'lucide-react';
 
 export default function DashboardPage() {
   const { user, isAuthenticated } = useAuth();
@@ -21,9 +20,11 @@ export default function DashboardPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-20 text-center">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Please sign in to view your dashboard</h1>
-        <p className="mt-4 text-gray-600 dark:text-gray-400">Login to track your progress and saved opportunities</p>
+      <div className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--bg)' }}>
+        <div className="glass glass-xl p-10 text-center max-w-md">
+          <h1 className="font-display text-2xl font-bold mb-2" style={{ color: 'var(--fg)' }}>Please sign in</h1>
+          <p style={{ color: 'var(--fg-dim)' }}>Login to track your progress and saved opportunities.</p>
+        </div>
       </div>
     );
   }
@@ -36,91 +37,88 @@ export default function DashboardPage() {
     .slice(0, 5);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
-      <h1 className="mb-8 text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
+    <div className="min-h-screen pt-[100px] px-6 pb-16" style={{ background: 'var(--bg)' }}>
+      <div className="max-w-[1300px] mx-auto">
+        <h2 className="font-display text-[clamp(2rem,4vw,3rem)] font-bold mb-2" style={{ color: 'var(--fg)' }}>Dashboard</h2>
+        <p className="mb-8" style={{ color: 'var(--fg-dim)' }}>Welcome back! Here&apos;s your progress.</p>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {/* My Courses */}
-        <div className="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-          <div className="mb-4 flex items-center gap-2">
-            <BookOpen className="h-5 w-5 text-blue-600" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">My Courses</h2>
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 mb-7">
+          {/* My Courses */}
+          <div className="glass p-6 lg:col-span-2" style={{ borderRadius: 'var(--radius-lg)' }}>
+            <h3 className="font-bold text-[18px] mb-4" style={{ color: 'var(--fg)' }}>My Courses</h3>
+            {enrolledCourses.length > 0 ? (
+              <div className="flex flex-col gap-4">
+                {enrolledCourses.map(course => {
+                  const enrollment = enrollments.find(e => e.course_id === course.id);
+                  const pct = enrollment?.progress_percent || 0;
+                  return (
+                    <div key={course.id} className="flex items-center justify-between flex-wrap gap-3 py-2" style={{ borderBottom: pct < 100 ? '1px solid var(--border)' : 'none' }}>
+                      <div>
+                        <strong style={{ color: 'var(--fg)' }}>{course.title}</strong>
+                        <br /><span className="text-[13px]" style={{ color: 'var(--muted)' }}>{pct}% complete</span>
+                      </div>
+                      <div className="w-[160px]">
+                        <div className="progress-bar"><div className="progress-fill" style={{ width: pct + '%', background: pct === 100 ? '#63b388' : '' }}></div></div>
+                      </div>
+                      <Link href={`/courses/${course.id}`} className="rounded-full px-4 py-1.5 text-[13px] font-semibold no-underline transition-all" style={{ background: 'var(--accent)', color: '#0a0a0f' }}>{pct === 100 ? 'Review' : 'Continue'}</Link>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <p style={{ color: 'var(--fg-dim)' }}>No enrolled courses yet.</p>
+            )}
           </div>
-          {enrolledCourses.length > 0 ? (
-            <div className="space-y-3">
-              {enrolledCourses.map(course => {
-                const enrollment = enrollments.find(e => e.course_id === course.id);
-                return (
-                  <div key={course.id} className="flex items-center justify-between">
-                    <Link href={`/courses/${course.id}`} className="text-blue-600 hover:underline dark:text-blue-400">
-                      {course.title}
-                    </Link>
-                    <span className="text-sm text-gray-500">{enrollment?.progress_percent || 0}%</span>
+
+          {/* Saved */}
+          <div className="glass p-6" style={{ borderRadius: 'var(--radius-lg)' }}>
+            <h3 className="font-bold text-[18px] mb-4" style={{ color: 'var(--fg)' }}>Saved</h3>
+            {savedOpportunities.length > 0 ? (
+              <div className="flex flex-col gap-3">
+                {savedOpportunities.slice(0, 5).map(so => (
+                  <div key={so.id} className="text-[14px] py-2" style={{ borderBottom: '1px solid var(--border)' }}>
+                    <strong style={{ color: 'var(--fg)' }}>{so.opportunity?.title}</strong>
+                    {so.opportunity?.deadline && <><br /><span className="text-[12px]" style={{ color: 'var(--muted)' }}>Deadline: {new Date(so.opportunity.deadline).toLocaleDateString()}</span></>}
                   </div>
-                );
-              })}
+                ))}
+              </div>
+            ) : (
+              <p style={{ color: 'var(--fg-dim)' }}>No saved opportunities.</p>
+            )}
+          </div>
+
+          {/* Deadlines */}
+          <div className="glass p-6" style={{ borderRadius: 'var(--radius-lg)' }}>
+            <h3 className="font-bold text-[18px] mb-4" style={{ color: 'var(--fg)' }}>Upcoming Deadlines</h3>
+            {upcomingDeadlines.length > 0 ? (
+              <div className="flex flex-col gap-2.5">
+                {upcomingDeadlines.map(o => (
+                  <div key={o!.id} className="flex gap-3 items-center text-[14px]">
+                    <span style={{ fontSize: '20px' }}>📅</span>
+                    <span><strong>{new Date(o!.deadline!).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</strong> — {o!.title}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p style={{ color: 'var(--fg-dim)' }}>No upcoming deadlines.</p>
+            )}
+          </div>
+
+          {/* Achievements */}
+          <div className="glass p-6" style={{ borderRadius: 'var(--radius-lg)' }}>
+            <h3 className="font-bold text-[18px] mb-4" style={{ color: 'var(--fg)' }}>Achievements</h3>
+            <div className="flex gap-3 flex-wrap">
+              <div className="w-[60px] h-[60px] rounded-[16px] flex items-center justify-center text-[28px]" style={{ background: 'rgba(201,169,110,0.15)' }} title="5-day streak">🔥</div>
+              <div className="w-[60px] h-[60px] rounded-[16px] flex items-center justify-center text-[28px]" style={{ background: 'rgba(99,179,136,0.15)' }} title="First course completed">🎓</div>
+              <div className="w-[60px] h-[60px] rounded-[16px] flex items-center justify-center text-[28px]" style={{ background: 'rgba(130,160,220,0.15)' }} title="10 quizzes passed">⭐</div>
             </div>
-          ) : (
-            <p className="text-gray-500 dark:text-gray-400">No enrolled courses yet</p>
-          )}
-        </div>
-
-        {/* Saved Opportunities */}
-        <div className="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-          <div className="mb-4 flex items-center gap-2">
-            <Bookmark className="h-5 w-5 text-blue-600" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Saved Opportunities</h2>
           </div>
-          {savedOpportunities.length > 0 ? (
-            <div className="space-y-3">
-              {savedOpportunities.slice(0, 5).map(so => (
-                <div key={so.id} className="flex items-center justify-between">
-                  <span className="text-gray-700 dark:text-gray-300">{so.opportunity?.title}</span>
-                  <span className="text-sm text-gray-500">{so.opportunity?.category}</span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-500 dark:text-gray-400">No saved opportunities</p>
-          )}
-        </div>
 
-        {/* Upcoming Deadlines */}
-        <div className="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-          <div className="mb-4 flex items-center gap-2">
-            <Calendar className="h-5 w-5 text-blue-600" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Upcoming Deadlines</h2>
+          {/* Certificates */}
+          <div className="glass p-6" style={{ borderRadius: 'var(--radius-lg)' }}>
+            <h3 className="font-bold text-[18px] mb-4" style={{ color: 'var(--fg)' }}>Certificates</h3>
+            <p style={{ color: 'var(--fg-dim)' }}>Complete courses to earn certificates.</p>
           </div>
-          {upcomingDeadlines.length > 0 ? (
-            <div className="space-y-3">
-              {upcomingDeadlines.map(opportunity => (
-                <div key={opportunity!.id} className="flex items-center justify-between">
-                  <span className="text-gray-700 dark:text-gray-300">{opportunity!.title}</span>
-                  <span className="text-sm text-red-500">{new Date(opportunity!.deadline!).toLocaleDateString()}</span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-500 dark:text-gray-400">No upcoming deadlines</p>
-          )}
-        </div>
-
-        {/* Achievements */}
-        <div className="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-          <div className="mb-4 flex items-center gap-2">
-            <Trophy className="h-5 w-5 text-yellow-500" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Achievements</h2>
-          </div>
-          <p className="text-gray-500 dark:text-gray-400">Complete courses to earn achievements</p>
-        </div>
-
-        {/* Certificates */}
-        <div className="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-          <div className="mb-4 flex items-center gap-2">
-            <Award className="h-5 w-5 text-green-500" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Certificates</h2>
-          </div>
-          <p className="text-gray-500 dark:text-gray-400">Complete courses to earn certificates</p>
         </div>
       </div>
     </div>
