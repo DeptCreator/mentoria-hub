@@ -1,0 +1,170 @@
+{
+  "home": {
+    "title": "Mentoria Hub",
+    "tagline": "Білімдік шеберлікке апарар жолыңыз",
+    "hero": {
+      "headline": "Білімдік мүмкіндіктер әлемін ашыңыз",
+      "subheadline": "Қызығушылықтарыңызға сай бәйгелер, курстар және бағдарламалар табыңыз. Жеке AI-қолданбашымен өз қарқыныңызда үйреніңіз.",
+      "ctaPrimary": "Мүмкіндіктерді табу",
+      "ctaSecondary": "Оқуды бастау"
+    },
+    "features": {
+      "title": "Біз не ұсынамыз",
+      "opportunities": {
+        "title": "Білімдік мүмкіндіктер",
+        "description": "Сіздің қызығушылықтарыңызға сай олимпиадалар, стажировкалар және бағдарламалар"
+      },
+      "courses": {
+        "title": "Асинхронды курстар",
+        "description": "Бейнесабақтар және тесттер арқылы өз қарқыныңызда үйреніңіз"
+      },
+      "aiAssistant": {
+        "title": "AI-қолданбашы Джарвис",
+        "description": "Ұсыныстар және сұрақтарға жауап беру үшін дауыстық көмекші"
+      },
+      "roadmap": {
+        "title": "Жеке Roadmap",
+        "description": "9-дан 11-ге дейінгі визуалды даму жоспары"
+      }
+    },
+    "cta": {
+      "title": "Mentoria-ға қосылыңыз",
+      "description": "Профиль жасап, бүгін-ақ жеке ұсыныстар алыңыз",
+      "button": "Тегін бастау"
+    }
+  },
+  "nav": {
+    "home": "Басты бет",
+    "opportunities": "Мүмкіндіктер",
+    "courses": "Курстар",
+    "dashboard": "Жеке кабинет",
+    "roadmap": "Roadmap",
+    "admin": "Админ",
+    "login": "Кіру",
+    "register": "Тіркелу",
+    "logout": "Шығу",
+    "profile": "Профиль"
+  },
+  "auth": {
+    "login": {
+      "title": "Аккаунтқа кіру",
+      "email": "Email",
+      "password": "Құпиясөз",
+      "submit": "Кіру",
+      "noAccount": "Аккаунт жоқ па?",
+      "register": "Тіркелу"
+    },
+    "register": {
+      "title": "Тіркелу",
+      "fullName": "Толық аты",
+      "email": "Email",
+      "password": "Құпиясөз",
+      "submit": "Тіркелу",
+      "hasAccount": "Аккаунт бар ма?",
+      "login": "Кіру"
+    }
+  },
+  "opportunities": {
+    "title": "Білімдік мүмкіндіктер",
+    "filters": {
+      "title": "Сүзгілер",
+      "category": "Санат",
+      "grade": "Сынып",
+      "format": "Формат",
+      "deadline": "Мерзім",
+      "all": "Барлығы"
+    },
+    "card": {
+      "category": "Санат",
+      "format": "Формат",
+      "grade": "Сынып",
+      "deadline": "Мерзім",
+      "requirements": "Талаптар",
+      "benefits": "Артықшылықтар",
+      "save": "Сақтау",
+      "saved": "Сақталды",
+      "apply": "Өтінім беру"
+    }
+  },
+  "courses": {
+    "title": "Mentoria курстары",
+    "level": {
+      "beginner": "Бастапқы",
+      "intermediate": "Орта",
+      "advanced": "Кәсіби"
+    },
+    "card": {
+      "lessons": "сабақ",
+      "duration": "сағат",
+      "enroll": "Тіркелу",
+      "continue": "Жалғастыру",
+      "completed": "Аяқталды"
+    },
+    "lesson": {
+      "title": "Сабақ",
+      "video": "Бейне",
+      "quiz": "Тест",
+      "materials": "Материалдар",
+      "next": "Келесі сабақ",
+      "previous": "Алдыңғы сабақ",
+      "complete": "Сабақты аяқтау"
+    }
+  },
+  "dashboard": {
+    "title": "Жеке кабинет",
+    "savedOpportunities": "Сақталған мүмкіндіктер",
+    "myCourses": "Менің курстарым",
+    "progress": "Прогресс",
+    "deadlines": "Жақын арадағы мерзімдер",
+    "recommendations": "Ұсыныстар",
+    "achievements": "Жетістіктер",
+    "certificates": "Сертификаттар"
+  },
+  "roadmap": {
+    "title": "Менің білімдік жолым",
+    "grade": "Сынып",
+    "milestones": "Мақсаттар",
+    "recommendedCourses": "Ұсынылған курстар",
+    "recommendedOpportunities": "Ұсынылған мүмкіндіктер"
+  },
+  "aiAssistant": {
+    "title": "AI-қолданбашы Джарвис",
+    "placeholder": "Сұрақ қойыңыз немесе дауыстық енгізу үшін микрофонды басыңыз...",
+    "listening": "Тыңдауда...",
+    "thinking": "Ойлауда...",
+    "speaking": "Сөйлеуде...",
+    "greeting": "Сәлем! Мен Джарвис, сіздің AI-қолданбашыңыз. Қалай көмектесе аламын?"
+  },
+  "admin": {
+    "title": "Админ панелі",
+    "courses": "Курстарды басқару",
+    "opportunities": "Мүмкіндіктерді басқару",
+    "users": "Пайдаланушылар",
+    "stats": "Статистика",
+    "add": "Қосу",
+    "edit": "Өңдеу",
+    "delete": "Жою",
+    "save": "Сақтау",
+    "cancel": "Болдырмау"
+  },
+  "common": {
+    "loading": "Жүктелуде...",
+    "error": "Қате",
+    "success": "Сәтті",
+    "save": "Сақтау",
+    "cancel": "Болдырмау",
+    "delete": "Жою",
+    "edit": "Өңдеу",
+    "create": "Жасау",
+    "search": "Іздеу",
+    "filter": "Сүзгі",
+    "sort": "Сұрыптау",
+    "close": "Жабу",
+    "open": "Ашу",
+    "back": "Артқа",
+    "next": "Алға",
+    "submit": "Жіберу",
+    "yes": "Иә",
+    "no": "Жоқ"
+  }
+}

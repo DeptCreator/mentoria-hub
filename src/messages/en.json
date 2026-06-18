@@ -1,0 +1,170 @@
+{
+  "home": {
+    "title": "Mentoria Hub",
+    "tagline": "Your Gateway to Educational Excellence",
+    "hero": {
+      "headline": "Discover a World of Educational Opportunities",
+      "subheadline": "Find competitions, courses, and programs that help you grow. Learn at your own pace with a personalized AI assistant.",
+      "ctaPrimary": "Find Opportunities",
+      "ctaSecondary": "Start Learning"
+    },
+    "features": {
+      "title": "What We Offer",
+      "opportunities": {
+        "title": "Educational Opportunities",
+        "description": "Competitions, olympiads, internships, and programs tailored to your interests"
+      },
+      "courses": {
+        "title": "Async Courses",
+        "description": "Learn at your own pace with video lessons and quizzes"
+      },
+      "aiAssistant": {
+        "title": "AI Assistant Jarvis",
+        "description": "Voice assistant for recommendations and answering questions"
+      },
+      "roadmap": {
+        "title": "Personal Roadmap",
+        "description": "Visual development plan from Grade 9 to Grade 11"
+      }
+    },
+    "cta": {
+      "title": "Join Mentoria",
+      "description": "Create a profile and get personalized recommendations today",
+      "button": "Start for Free"
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "opportunities": "Opportunities",
+    "courses": "Courses",
+    "dashboard": "Dashboard",
+    "roadmap": "Roadmap",
+    "admin": "Admin",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "profile": "Profile"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign In",
+      "noAccount": "No account?",
+      "register": "Register"
+    },
+    "register": {
+      "title": "Register",
+      "fullName": "Full Name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Register",
+      "hasAccount": "Already have an account?",
+      "login": "Sign In"
+    }
+  },
+  "opportunities": {
+    "title": "Educational Opportunities",
+    "filters": {
+      "title": "Filters",
+      "category": "Category",
+      "grade": "Grade",
+      "format": "Format",
+      "deadline": "Deadline",
+      "all": "All"
+    },
+    "card": {
+      "category": "Category",
+      "format": "Format",
+      "grade": "Grade",
+      "deadline": "Deadline",
+      "requirements": "Requirements",
+      "benefits": "Benefits",
+      "save": "Save",
+      "saved": "Saved",
+      "apply": "Apply"
+    }
+  },
+  "courses": {
+    "title": "Mentoria Courses",
+    "level": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "card": {
+      "lessons": "lessons",
+      "duration": "hours",
+      "enroll": "Enroll",
+      "continue": "Continue",
+      "completed": "Completed"
+    },
+    "lesson": {
+      "title": "Lesson",
+      "video": "Video",
+      "quiz": "Quiz",
+      "materials": "Materials",
+      "next": "Next Lesson",
+      "previous": "Previous Lesson",
+      "complete": "Complete Lesson"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "savedOpportunities": "Saved Opportunities",
+    "myCourses": "My Courses",
+    "progress": "Progress",
+    "deadlines": "Upcoming Deadlines",
+    "recommendations": "Recommendations",
+    "achievements": "Achievements",
+    "certificates": "Certificates"
+  },
+  "roadmap": {
+    "title": "My Educational Path",
+    "grade": "Grade",
+    "milestones": "Goals",
+    "recommendedCourses": "Recommended Courses",
+    "recommendedOpportunities": "Recommended Opportunities"
+  },
+  "aiAssistant": {
+    "title": "AI Assistant Jarvis",
+    "placeholder": "Ask a question or press microphone for voice input...",
+    "listening": "Listening...",
+    "thinking": "Thinking...",
+    "speaking": "Speaking...",
+    "greeting": "Hello! I'm Jarvis, your AI assistant. How can I help?"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "courses": "Manage Courses",
+    "opportunities": "Manage Opportunities",
+    "users": "Users",
+    "stats": "Statistics",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "close": "Close",
+    "open": "Open",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "yes": "Yes",
+    "no": "No"
+  }
+}
