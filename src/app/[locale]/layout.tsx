@@ -6,6 +6,7 @@ import Navbar from '@/components/layout/Navbar';
 import ThemeProvider from '@/components/layout/ThemeProvider';
 import VoiceAssistant from '@/components/ai-assistant/VoiceAssistant';
 import Footer from '@/components/layout/Footer';
+import ToastContainer from '@/components/layout/Toast';
 import '@/app/globals.css';
 
 export default async function LocaleLayout({
@@ -38,6 +39,7 @@ export default async function LocaleLayout({
             </main>
             <Footer />
             <VoiceAssistant />
+            <ToastContainer toasts={[]} />
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

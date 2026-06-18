@@ -3,6 +3,7 @@
 import { useCourses } from '@/hooks/useCourses';
 import { useAuth } from '@/hooks/useAuth';
 import CourseCard from './CourseCard';
+import { SkeletonGrid } from '@/components/layout/Skeleton';
 
 export default function CourseList() {
   const { courses, loading, error, enroll, getEnrollment, isEnrolled, fetchEnrollments } = useCourses();
@@ -13,7 +14,14 @@ export default function CourseList() {
     await enroll(user.id, courseId);
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}><p style={{ color: 'var(--fg-dim)' }}>Loading...</p></div>;
+  if (loading) return (
+    <div className="min-h-screen pt-[100px] px-6 pb-16" style={{ background: 'var(--bg)' }}>
+      <div className="max-w-[1200px] mx-auto">
+        <div className="h-8 w-48 rounded mb-8 animate-pulse" style={{ background: 'var(--border)' }} />
+        <SkeletonGrid count={6} />
+      </div>
+    </div>
+  );
   if (error) return <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}><p style={{ color: '#dc7864' }}>{error}</p></div>;
 
   return (

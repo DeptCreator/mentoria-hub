@@ -5,6 +5,7 @@ import { useOpportunities } from '@/hooks/useOpportunities';
 import { useCourses } from '@/hooks/useCourses';
 import { useEffect } from 'react';
 import Link from 'next/link';
+import { SkeletonDashboard } from '@/components/layout/Skeleton';
 
 export default function DashboardPage() {
   const { user, isAuthenticated } = useAuth();
@@ -40,7 +41,7 @@ export default function DashboardPage() {
     <div className="min-h-screen pt-[100px] px-6 pb-16" style={{ background: 'var(--bg)' }}>
       <div className="max-w-[1300px] mx-auto">
         <h2 className="font-display text-[clamp(2rem,4vw,3rem)] font-bold mb-2" style={{ color: 'var(--fg)' }}>Dashboard</h2>
-        <p className="mb-8" style={{ color: 'var(--fg-dim)' }}>Welcome back! Here&apos;s your progress.</p>
+        <p className="mb-8" style={{ color: 'var(--fg-dim)' }}>Welcome back! Here's your progress.</p>
 
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 mb-7">
           {/* My Courses */}

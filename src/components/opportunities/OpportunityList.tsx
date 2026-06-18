@@ -5,6 +5,7 @@ import { useOpportunities } from '@/hooks/useOpportunities';
 import { useAuth } from '@/hooks/useAuth';
 import OpportunityCard from './OpportunityCard';
 import OpportunityFilters from './OpportunityFilters';
+import { SkeletonGrid } from '@/components/layout/Skeleton';
 
 export default function OpportunityList() {
   const { opportunities, loading, error, saveOpportunity, unsaveOpportunity, isSaved, fetchOpportunities } = useOpportunities();
@@ -29,7 +30,14 @@ export default function OpportunityList() {
     await unsaveOpportunity(user.id, oppId);
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}><p style={{ color: 'var(--fg-dim)' }}>Loading...</p></div>;
+  if (loading) return (
+    <div className="min-h-screen pt-[100px] px-6 pb-16" style={{ background: 'var(--bg)' }}>
+      <div className="max-w-[1200px] mx-auto">
+        <div className="h-8 w-64 rounded mb-8 animate-pulse" style={{ background: 'var(--border)' }} />
+        <SkeletonGrid count={6} />
+      </div>
+    </div>
+  );
   if (error) return <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}><p style={{ color: '#dc7864' }}>{error}</p></div>;
 
   return (

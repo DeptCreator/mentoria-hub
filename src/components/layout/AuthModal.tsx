@@ -41,50 +41,97 @@ export default function AuthModal({ isOpen, onClose, mode = 'login' }: { isOpen:
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800">
-        <h2 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white">
-          {authMode === 'login' ? 'Sign In' : 'Register'}
-        </h2>
+    <div className="fixed inset-0 z-[300] flex items-center justify-center animate-fadeIn"
+      style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}
+      onClick={onClose}
+    >
+      <div className="w-full max-w-[420px] glass glass-xl p-8 mx-4 animate-fadeIn"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center cursor-pointer"
+          style={{ background: 'var(--surface)', color: 'var(--fg-dim)' }}
+        >
+          ✕
+        </button>
 
+        {/* Header */}
+        <div className="text-center mb-6">
+          <div className="w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center"
+            style={{ background: 'var(--accent)' }}
+          >
+            <span className="text-[20px]">🔐</span>
+          </div>
+          <h2 className="font-display text-[1.75rem] font-bold" style={{ color: 'var(--fg)' }}>
+            {authMode === 'login' ? 'Welcome Back' : 'Join Mentoria'}
+          </h2>
+          <p className="text-[14px] mt-1" style={{ color: 'var(--fg-dim)' }}>
+            {authMode === 'login' ? 'Sign in to continue your journey' : 'Start your educational adventure'}
+          </p>
+        </div>
+
+        {/* Error */}
         {error && (
-          <div className="mb-4 rounded bg-red-100 p-3 text-red-700 dark:bg-red-900 dark:text-red-100">
+          <div className="mb-4 p-3 rounded-[var(--radius-sm)] text-[14px]"
+            style={{ background: 'rgba(220,120,100,0.15)', color: '#dc7864', border: '1px solid rgba(220,120,100,0.3)' }}
+          >
             {error}
           </div>
         )}
 
+        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           {authMode === 'register' && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Full Name</label>
+              <label className="block text-[13px] font-medium mb-1.5" style={{ color: 'var(--fg-dim)' }}>
+                Full Name
+              </label>
               <input
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="mt-1 w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                className="w-full px-4 py-3 rounded-[var(--radius-sm)] text-[14px] outline-none transition-all"
+                style={{ background: 'var(--surface)', color: 'var(--fg)', border: '1px solid var(--border)' }}
+                onFocus={e => e.target.style.borderColor = 'var(--accent)'}
+                onBlur={e => e.target.style.borderColor = 'var(--border)'}
+                placeholder="Enter your name"
                 required
               />
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+            <label className="block text-[13px] font-medium mb-1.5" style={{ color: 'var(--fg-dim)' }}>
+              Email
+            </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              className="w-full px-4 py-3 rounded-[var(--radius-sm)] text-[14px] outline-none transition-all"
+              style={{ background: 'var(--surface)', color: 'var(--fg)', border: '1px solid var(--border)' }}
+              onFocus={e => e.target.style.borderColor = 'var(--accent)'}
+              onBlur={e => e.target.style.borderColor = 'var(--border)'}
+              placeholder="you@example.com"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+            <label className="block text-[13px] font-medium mb-1.5" style={{ color: 'var(--fg-dim)' }}>
+              Password
+            </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              className="w-full px-4 py-3 rounded-[var(--radius-sm)] text-[14px] outline-none transition-all"
+              style={{ background: 'var(--surface)', color: 'var(--fg)', border: '1px solid var(--border)' }}
+              onFocus={e => e.target.style.borderColor = 'var(--accent)'}
+              onBlur={e => e.target.style.borderColor = 'var(--border)'}
+              placeholder="Min 6 characters"
               required
             />
           </div>
@@ -92,36 +139,43 @@ export default function AuthModal({ isOpen, onClose, mode = 'login' }: { isOpen:
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
+            className="w-full btn-gold py-3.5 text-[15px] disabled:opacity-50"
           >
-            {loading ? 'Loading...' : authMode === 'login' ? 'Sign In' : 'Register'}
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="w-4 h-4 border-2 border-[#0a0a0f] border-t-transparent rounded-full animate-spin" />
+                Loading...
+              </span>
+            ) : authMode === 'login' ? 'Sign In' : 'Create Account'}
           </button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
+        {/* Toggle mode */}
+        <p className="mt-5 text-center text-[14px]" style={{ color: 'var(--fg-dim)' }}>
           {authMode === 'login' ? (
             <>
-              No account?{' '}
-              <button onClick={() => setAuthMode('register')} className="text-blue-600 hover:underline">
-                Register
+              New here?{' '}
+              <button
+                onClick={() => setAuthMode('register')}
+                className="font-semibold cursor-pointer transition-all"
+                style={{ color: 'var(--accent)' }}
+              >
+                Get Started
               </button>
             </>
           ) : (
             <>
               Already have an account?{' '}
-              <button onClick={() => setAuthMode('login')} className="text-blue-600 hover:underline">
+              <button
+                onClick={() => setAuthMode('login')}
+                className="font-semibold cursor-pointer transition-all"
+                style={{ color: 'var(--accent)' }}
+              >
                 Sign In
               </button>
             </>
           )}
         </p>
-
-        <button
-          onClick={onClose}
-          className="mt-4 w-full rounded border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
-        >
-          Cancel
-        </button>
       </div>
     </div>
   );
