@@ -28,17 +28,48 @@
 }
 
 .light, [data-theme="light"] {
-  --bg: #f5f3ee;
-  --bg-alt: #ede9e2;
-  --surface: rgba(255,255,255,0.55);
-  --surface-hover: rgba(255,255,255,0.75);
-  --fg: #1a1814;
-  --fg-dim: #4a4640;
-  --muted: #8a8578;
+  --bg: #f8f8f6;
+  --bg-alt: #eeeee9;
+  --surface: rgba(255,255,255,0.72);
+  --surface-hover: rgba(255,255,255,0.92);
+  --fg: #1c1c1a;
+  --fg-dim: #4d4d49;
+  --muted: #7a7a72;
   --border: rgba(0,0,0,0.08);
   --border-strong: rgba(0,0,0,0.16);
-  --accent: #a07828;
-  --accent-glow: rgba(160,120,40,0.18);
+  --accent: #9a7428;
+  --accent-glow: rgba(154,116,40,0.18);
+}
+
+.light .glass,
+[data-theme="light"] .glass {
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8);
+}
+
+.light .card-hover:hover,
+[data-theme="light"] .card-hover:hover {
+  box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+}
+
+.light .btn-gold,
+[data-theme="light"] .btn-gold {
+  color: #fff;
+}
+
+.light .chat-bubble-user,
+[data-theme="light"] .chat-bubble-user {
+  color: #fff;
+}
+
+.light .step-circle.completed,
+[data-theme="light"] .step-circle.completed,
+.light .timeline-node.active,
+[data-theme="light"] .timeline-node.active,
+.light .timeline-node.completed,
+[data-theme="light"] .timeline-node.completed,
+.light .tag-pill.selected,
+[data-theme="light"] .tag-pill.selected {
+  color: #fff;
 }
 
 @theme inline {
