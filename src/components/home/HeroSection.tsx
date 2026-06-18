@@ -5,10 +5,15 @@ import Link from 'next/link';
 export default function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Animated gradient background (inspired by THREE.js) */}
-      <div className="absolute inset-0 z-0" style={{
-        background: 'radial-gradient(ellipse at 30% 50%, rgba(201,169,110,0.08) 0%, transparent 60%), radial-gradient(ellipse at 70% 30%, rgba(255,255,255,0.03) 0%, transparent 50%), var(--bg)',
+      {/* Hero background image */}
+      <div className="absolute inset-0 z-0">
+        <img src="/images/hero-bg.png" alt="" className="w-full h-full object-cover opacity-60" />
+      </div>
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 z-[1]" style={{
+        background: 'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,15,0.85) 100%)',
       }} />
+      {/* Brand watermark */}
       <div className="absolute inset-0 z-0 opacity-[0.04] pointer-events-none select-none flex items-center justify-center">
         <span className="font-display text-[clamp(6rem,18vw,14rem)] font-black" style={{ color: 'var(--fg)' }}>MENTORIA</span>
       </div>
