@@ -26,7 +26,7 @@ export default function Navbar() {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-[100] h-[72px] flex items-center justify-between px-6 lg:px-10"
-        style={{ background: 'rgba(10,10,15,0.85)', backdropFilter: 'blur(18px)', borderBottom: '1px solid var(--border)' }}
+        style={{ background: 'var(--surface)', backdropFilter: 'blur(18px)', borderBottom: '1px solid var(--border)' }}
       >
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 no-underline">
@@ -120,7 +120,7 @@ export default function Navbar() {
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-[99] flex flex-col items-center justify-center gap-6"
-          style={{ background: 'rgba(10,10,15,0.98)', backdropFilter: 'blur(20px)' }}
+          style={{ background: 'var(--bg)', backdropFilter: 'blur(20px)' }}
         >
           {navLinks.map(link => (
             <Link

@@ -659,6 +659,30 @@ textarea:focus-visible {
   color: var(--muted);
 }
 
+/* Native select dropdown theming */
+select.glass-input,
+select {
+  background-color: var(--surface);
+  color: var(--fg);
+}
+
+select option,
+select optgroup {
+  background: var(--surface);
+  color: var(--fg);
+}
+
+select option:checked,
+select option:hover {
+  background: var(--accent);
+  color: #0a0a0f;
+}
+
+select:focus option {
+  background: var(--surface);
+  color: var(--fg);
+}
+
 /* ===========================================================
    NEW: Selection Color
    =========================================================== */
