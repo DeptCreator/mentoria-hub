@@ -1,120 +1,84 @@
 'use client';
 
-import { BookOpen, Clock, BarChart } from 'lucide-react';
+import { BookOpen, Clock, BarChart, PlayCircle } from 'lucide-react';
 import { Course } from '@/types';
 import Link from 'next/link';
 
 interface Props {
   course: Course;
   isEnrolled: boolean;
-  progress?: number;
-  onEnroll: () => void;
+  progress: number;
 }
 
-export default function CourseCard({ course, isEnrolled, progress, onEnroll }: Props) {
-  const levelBadge = (level: string) => {
-    const badges: Record<string, { class: string; color: string }> = {
-      'beginner': { class: 'badge-green', color: '#63b388' },
-      'intermediate': { class: 'badge-gold', color: 'var(--accent)' },
-      'advanced': { class: 'badge-coral', color: '#dc7864' },
-    };
-    return badges[level] || badges.beginner;
+export default function CourseCard({ course, isEnrolled, progress }: Props) {
+  const lessonsCount = course.lessons?.length || 0;
+  const level = course.level || 'beginner';
+  const levelColors: Record<string, { bg: string; color: string }> = {
+    beginner: { bg: 'rgba(99,179,136,0.18)', color: '#63b388' },
+    intermediate: { bg: 'rgba(201,169,110,0.18)', color: '#c9a96e' },
+    advanced: { bg: 'rgba(220,120,100,0.18)', color: '#dc7864' },
   };
-
-  const badge = levelBadge(course.level);
-  const pct = progress || 0;
+  const l = levelColors[level] || levelColors.beginner;
 
   return (
-    <div className="glass glass-lg card-hover p-6 flex flex-col gap-4"
-      style={{ transition: 'all 0.3s ease' }}
-      onMouseOver={e => { e.currentTarget.style.background = 'var(--surface-hover)'; e.currentTarget.style.borderColor = 'var(--border-strong)'; }}
-      onMouseOut={e => { e.currentTarget.style.background = ''; e.currentTarget.style.borderColor = ''; }}
+    <Link
+      href={`/courses/${course.id}`}
+      className="glass glass-lg card-hover p-6 flex flex-col gap-4 transition-all hover-lift no-underline group"
     >
-      {/* Thumbnail */}
-      <div className="w-full h-[160px] rounded-[var(--radius-sm)] overflow-hidden mb-2"
-        style={{ background: 'linear-gradient(135deg, rgba(201,169,110,0.12), rgba(130,160,220,0.12))' }}
-      >
-        <div className="w-full h-full flex items-center justify-center text-[64px]">
-          {course.category === 'Math' ? '📐' : 
-           course.category === 'English' ? '📖' :
-           course.category === 'Physics' ? '⚡' :
-           course.category === 'Biology' ? '🧬' :
-           course.category === 'Economics' ? '📈' :
-           course.category === 'Programming' ? '💻' : '📚'}
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-2 flex-wrap">
+            <span className="text-[11px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full" style={{ background: l.bg, color: l.color }}>
+              {level}
+            </span>
+            <span className="badge-blue">{course.category}</span>
+          </div>
+          <h3 className="font-bold text-[18px] leading-tight group-hover:text-[var(--accent)] transition-colors" style={{ color: 'var(--fg)' }}>
+            {course.title}
+          </h3>
+        </div>
+        <div className="w-12 h-12 rounded-[14px] flex items-center justify-center shrink-0" style={{ background: 'var(--surface)' }}>
+          <BookOpen className="w-5 h-5" style={{ color: 'var(--accent)' }} />
         </div>
       </div>
 
-      {/* Badge + Bookmark */}
-      <div className="flex items-center justify-between">
-        <span className={`badge ${badge.class}`}>
-          {course.level}
-        </span>
-        <button className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all"
-          style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
-        >
-          <svg className="w-4 h-4" style={{ color: 'var(--fg-dim)' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-          </svg>
-        </button>
-      </div>
-
-      {/* Title */}
-      <h3 className="font-bold text-[18px] leading-tight" style={{ color: 'var(--fg)' }}>
-        {course.title}
-      </h3>
-
-      {/* Description */}
       <p className="text-[14px] leading-relaxed line-clamp-2" style={{ color: 'var(--fg-dim)' }}>
         {course.description}
       </p>
 
-      {/* Instructor */}
-      <div className="flex items-center gap-2 text-[13px]" style={{ color: 'var(--muted)' }}>
-        <div className="w-6 h-6 rounded-full flex items-center justify-center text-[12px]"
-          style={{ background: 'var(--surface)' }}
-        >
-          👤
-        </div>
-        Mentoria Team
+      <div className="flex items-center gap-4 text-[13px]" style={{ color: 'var(--muted)' }}>
+        <span className="flex items-center gap-1">
+          <Clock className="w-3.5 h-3.5" />
+          {course.duration_hours || `${lessonsCount * 2}h`}
+        </span>
+        <span className="flex items-center gap-1">
+          <PlayCircle className="w-3.5 h-3.5" />
+          {lessonsCount} lessons
+        </span>
       </div>
 
-      {/* Progress or Meta */}
       {isEnrolled ? (
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-[13px]">
-            <span style={{ color: 'var(--fg-dim)' }}>{pct}% complete</span>
-            <span style={{ color: 'var(--muted)' }}>{course.lessons?.length || 0} lessons</span>
+        <div className="mt-auto">
+          <div className="flex items-center justify-between mb-2 text-[13px]">
+            <span style={{ color: 'var(--muted)' }}>Progress</span>
+            <span className="font-semibold" style={{ color: progress === 100 ? '#63b388' : 'var(--accent)' }}>{progress}%</span>
           </div>
           <div className="progress-bar">
-            <div className="progress-fill" style={{ width: pct + '%' }} />
+            <div className="progress-fill" style={{ width: `${progress}%`, background: progress === 100 ? '#63b388' : '' }} />
           </div>
-          <Link
-            href={`/courses/${course.id}`}
-            className="btn-gold w-full text-center no-underline inline-block"
-          >
-            {pct === 100 ? 'Review' : 'Continue Learning'}
-          </Link>
+          <div className="mt-3 text-center">
+            <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold" style={{ color: 'var(--accent)' }}>
+              {progress === 100 ? 'Completed 🎉' : 'Continue Learning →'}
+            </span>
+          </div>
         </div>
       ) : (
-        <div className="mt-auto space-y-3">
-          <div className="flex items-center gap-4 text-[13px]" style={{ color: 'var(--muted)' }}>
-            <span className="flex items-center gap-1">
-              <BookOpen className="w-3.5 h-3.5" />
-              {course.lessons?.length || 0} lessons
-            </span>
-            <span className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5" />
-              4 weeks
-            </span>
-          </div>
-          <button
-            onClick={onEnroll}
-            className="w-full btn-gold text-center"
-          >
+        <div className="mt-auto pt-2">
+          <span className="btn-gold w-full justify-center inline-flex items-center gap-2" style={{ pointerEvents: 'none' }}>
             Enroll Now
-          </button>
+          </span>
         </div>
       )}
-    </div>
+    </Link>
   );
 }

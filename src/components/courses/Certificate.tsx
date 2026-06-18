@@ -1,6 +1,6 @@
 'use client';
 
-import { Award, Download } from 'lucide-react';
+import { Award, Download, Share2 } from 'lucide-react';
 
 interface Props {
   courseName: string;
@@ -11,19 +11,38 @@ interface Props {
 
 export default function Certificate({ courseName, studentName, completionDate, certificateNumber }: Props) {
   return (
-    <div className="rounded-xl border-2 border-yellow-400 bg-gradient-to-br from-yellow-50 to-orange-50 p-8 text-center dark:from-yellow-900/20 dark:to-orange-900/20">
-      <Award className="mx-auto mb-4 h-16 w-16 text-yellow-500" />
-      <h2 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">Certificate of Completion</h2>
-      <p className="mb-4 text-gray-600 dark:text-gray-400">This certifies that</p>
-      <p className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">{studentName}</p>
-      <p className="mb-4 text-gray-600 dark:text-gray-400">has successfully completed</p>
-      <p className="mb-4 text-xl font-bold text-blue-600 dark:text-blue-400">{courseName}</p>
-      <p className="mb-4 text-sm text-gray-500">Completed on: {completionDate}</p>
-      <p className="text-xs text-gray-400">Certificate ID: {certificateNumber}</p>
-      <button className="mt-6 inline-flex items-center gap-2 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
-        <Download className="h-4 w-4" />
-        Download Certificate
-      </button>
+    <div className="glass glass-xl p-10 text-center relative overflow-hidden" style={{ borderRadius: 'var(--radius-lg)', borderColor: 'var(--accent)' }}>
+      <div className="absolute inset-0 opacity-10 pointer-events-none"
+        style={{ background: 'radial-gradient(circle at top right, var(--accent), transparent 60%)' }} />
+      
+      <div className="relative z-10">
+        <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-5"
+          style={{ background: 'rgba(201,169,110,0.18)', border: '2px solid var(--accent)' }}>
+          <Award className="w-10 h-10" style={{ color: 'var(--accent)' }} />
+        </div>
+        
+        <p className="text-[12px] font-bold uppercase tracking-[0.2em] mb-2" style={{ color: 'var(--accent)' }}>Certificate of Completion</p>
+        <h3 className="font-display text-[28px] font-bold mb-1" style={{ color: 'var(--fg)' }}>{studentName}</h3>
+        <p className="text-[14px] mb-4" style={{ color: 'var(--fg-dim)' }}>has successfully completed</p>
+        <p className="font-display text-[22px] font-bold mb-6" style={{ color: 'var(--accent)' }}>{courseName}</p>
+        
+        <div className="flex items-center justify-center gap-6 text-[13px] mb-6" style={{ color: 'var(--muted)' }}>
+          <span>Completed: {completionDate}</span>
+          <span>ID: {certificateNumber}</span>
+        </div>
+        
+        <div className="flex gap-3 justify-center">
+          <button className="btn-gold inline-flex items-center gap-2">
+            <Download className="w-4 h-4" />
+            Download
+          </button>
+          <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[14px] font-semibold transition-all"
+            style={{ background: 'transparent', color: 'var(--fg)', border: '1.5px solid var(--border-strong)' }}>
+            <Share2 className="w-4 h-4" />
+            Share
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

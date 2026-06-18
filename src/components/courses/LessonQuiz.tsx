@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { QuizQuestion } from '@/types';
+import { CheckCircle, XCircle, Trophy, ArrowRight } from 'lucide-react';
 
 interface Props {
   questions: QuizQuestion[];
@@ -13,7 +14,10 @@ export default function LessonQuiz({ questions, onComplete }: Props) {
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
   const [showResults, setShowResults] = useState(false);
 
+  if (!questions || questions.length === 0) return null;
+
   const handleSelect = (answerIndex: number) => {
+    if (showResults) return;
     const newAnswers = [...selectedAnswers];
     newAnswers[currentQuestion] = answerIndex;
     setSelectedAnswers(newAnswers);
@@ -31,55 +35,90 @@ export default function LessonQuiz({ questions, onComplete }: Props) {
     }
   };
 
-  if (showResults) {
-    const correct = selectedAnswers.reduce((acc, answer, i) => {
-      return acc + (answer === questions[i].correct ? 1 : 0);
-    }, 0);
-    const percentage = Math.round((correct / questions.length) * 100);
+  const correct = selectedAnswers.reduce((acc, answer, i) => {
+    return acc + (answer === questions[i].correct ? 1 : 0);
+  }, 0);
+  const percentage = Math.round((correct / questions.length) * 100);
 
+  if (showResults) {
     return (
-      <div className="rounded-lg bg-gray-50 p-6 text-center dark:bg-gray-700">
-        <h3 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">Quiz Results</h3>
-        <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{percentage}%</p>
-        <p className="text-gray-600 dark:text-gray-400">{correct} out of {questions.length} correct</p>
+      <div className="glass glass-xl p-8 text-center" style={{ borderRadius: 'var(--radius-lg)' }}>
+        <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(201,169,110,0.15)' }}>
+          <Trophy className="w-8 h-8" style={{ color: 'var(--accent)' }} />
+        </div>
+        <h3 className="font-display text-[24px] font-bold mb-2" style={{ color: 'var(--fg)' }}>Quiz Results</h3>
+        <p className="text-[48px] font-black mb-1" style={{ color: percentage >= 70 ? '#63b388' : '#dc7864' }}>
+          {percentage}%
+        </p>
+        <p className="text-[14px] mb-6" style={{ color: 'var(--fg-dim)' }}>{correct} out of {questions.length} correct</p>
+        <div className="flex flex-col gap-2 text-left max-w-md mx-auto">
+          {questions.map((q, i) => {
+            const isCorrect = selectedAnswers[i] === q.correct;
+            return (
+              <div key={i} className="p-3 rounded-lg flex items-start gap-3" style={{ background: 'var(--surface)' }}>
+                {isCorrect ? <CheckCircle className="w-4 h-4 mt-0.5" style={{ color: '#63b388' }} /> : <XCircle className="w-4 h-4 mt-0.5" style={{ color: '#dc7864' }} />}
+                <div>
+                  <p className="text-[13px] font-medium" style={{ color: 'var(--fg)' }}>{q.question}</p>
+                  <p className="text-[12px]" style={{ color: isCorrect ? '#63b388' : '#dc7864' }}>
+                    Your answer: {q.options[selectedAnswers[i]] || 'Skipped'}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }
 
   const question = questions[currentQuestion];
+  const selected = selectedAnswers[currentQuestion];
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-      <div className="mb-4 flex items-center justify-between">
-        <span className="text-sm text-gray-500 dark:text-gray-400">
+    <div className="glass p-6" style={{ borderRadius: 'var(--radius-lg)' }}>
+      <div className="flex items-center justify-between mb-6">
+        <span className="text-[12px] font-bold uppercase tracking-wider" style={{ color: 'var(--accent)' }}>
           Question {currentQuestion + 1} of {questions.length}
         </span>
+        <div className="h-1.5 w-24 rounded-full overflow-hidden" style={{ background: 'var(--surface)' }}>
+          <div className="h-full rounded-full transition-all" style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%`, background: 'var(--accent)' }} />
+        </div>
       </div>
 
-      <h3 className="mb-4 text-lg font-medium text-gray-900 dark:text-white">{question.question}</h3>
+      <h3 className="font-bold text-[20px] mb-6" style={{ color: 'var(--fg)' }}>{question.question}</h3>
 
-      <div className="space-y-2">
+      <div className="flex flex-col gap-3 mb-6">
         {question.options.map((option, i) => (
           <button
             key={i}
             onClick={() => handleSelect(i)}
-            className={`w-full rounded-lg border p-3 text-left transition ${
-              selectedAnswers[currentQuestion] === i
-                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                : 'border-gray-200 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700'
-            }`}
+            className="w-full text-left p-4 rounded-lg transition-all flex items-center gap-3 active-press"
+            style={{
+              background: selected === i ? 'var(--surface)' : 'transparent',
+              border: selected === i ? '1.5px solid var(--accent)' : '1px solid var(--border)',
+              color: selected === i ? 'var(--fg)' : 'var(--fg-dim)',
+            }}
           >
-            {option}
+            <span className="w-6 h-6 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0"
+              style={{
+                background: selected === i ? 'var(--accent)' : 'var(--surface)',
+                color: selected === i ? '#0a0a0f' : 'var(--fg-dim)',
+              }}
+            >
+              {String.fromCharCode(65 + i)}
+            </span>
+            <span className="text-[15px]">{option}</span>
           </button>
         ))}
       </div>
 
       <button
         onClick={handleNext}
-        disabled={selectedAnswers[currentQuestion] === undefined}
-        className="mt-4 rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+        disabled={selected === undefined}
+        className="btn-gold inline-flex items-center gap-2 disabled:opacity-40"
       >
-        {currentQuestion < questions.length - 1 ? 'Next' : 'Finish'}
+        {currentQuestion < questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
+        <ArrowRight className="w-4 h-4" />
       </button>
     </div>
   );

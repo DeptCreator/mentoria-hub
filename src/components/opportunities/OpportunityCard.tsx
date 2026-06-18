@@ -1,6 +1,6 @@
 'use client';
 
-import { Bookmark, Calendar, MapPin, Users } from 'lucide-react';
+import { Bookmark, Calendar, Users, ExternalLink } from 'lucide-react';
 import { Opportunity } from '@/types';
 
 interface Props {
@@ -8,98 +8,72 @@ interface Props {
   isSaved: boolean;
   onSave: () => void;
   onUnsave: () => void;
+  isAuthenticated: boolean;
 }
 
-export default function OpportunityCard({ opportunity, isSaved, onSave, onUnsave }: Props) {
-  const badgeColor = (cat: string) => {
-    const colors: Record<string, string> = {
-      'Business': 'badge-green',
-      'STEM': 'badge-blue',
-      'Social Impact': 'badge-gold',
-      'Finance': 'badge-coral',
-      'Programming': 'badge-blue',
-      'Science': 'badge-green',
-      'English': 'badge-gold',
-      'University Prep': 'badge-coral',
-    };
-    return colors[cat] || 'badge-gold';
-  };
+export default function OpportunityCard({ opportunity, isSaved, onSave, onUnsave, isAuthenticated }: Props) {
+  const deadline = opportunity.deadline
+    ? new Date(opportunity.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    : 'No deadline';
+
+  const formatBadge = (format: string) => format?.charAt(0).toUpperCase() + format?.slice(1) || 'Online';
 
   return (
-    <div className="glass glass-lg card-hover p-6 flex flex-col gap-4"
-      style={{ transition: 'all 0.3s ease' }}
-      onMouseOver={e => { e.currentTarget.style.background = 'var(--surface-hover)'; e.currentTarget.style.borderColor = 'var(--border-strong)'; }}
-      onMouseOut={e => { e.currentTarget.style.background = ''; e.currentTarget.style.borderColor = ''; }}
-    >
-      {/* Header image */}
-      <div className="w-full h-[140px] rounded-[var(--radius-sm)] overflow-hidden mb-2"
-        style={{ background: 'linear-gradient(135deg, rgba(201,169,110,0.15), rgba(130,160,220,0.15))' }}
-      >
-        <div className="w-full h-full flex items-center justify-center text-[48px]">
-          {opportunity.category === 'STEM' ? '🔬' : 
-           opportunity.category === 'Business' ? '💼' :
-           opportunity.category === 'Programming' ? '💻' :
-           opportunity.category === 'English' ? '📚' :
-           opportunity.category === 'Science' ? '🔭' : '🎯'}
+    <div className="glass glass-lg card-hover p-6 flex flex-col gap-4 transition-all hover-lift">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-2 flex-wrap">
+            <span className="badge-gold">{opportunity.category}</span>
+            <span className="badge-blue">{formatBadge(opportunity.format)}</span>
+            {opportunity.grade_min && (
+              <span className="badge-green">Grades {opportunity.grade_min}-{opportunity.grade_max || opportunity.grade_min}</span>
+            )}
+          </div>
+          <h3 className="font-bold text-[18px] leading-tight" style={{ color: 'var(--fg)' }}>{opportunity.title}</h3>
         </div>
+        {isAuthenticated && (
+          <button
+            onClick={isSaved ? onUnsave : onSave}
+            className="w-10 h-10 rounded-full flex items-center justify-center transition-all active-press"
+            style={{
+              background: isSaved ? 'var(--accent)' : 'var(--surface)',
+              border: isSaved ? 'none' : '1px solid var(--border)',
+              color: isSaved ? '#0a0a0f' : 'var(--fg-dim)',
+            }}
+            aria-label={isSaved ? 'Remove from saved' : 'Save opportunity'}
+            title={isSaved ? 'Saved' : 'Save'}
+          >
+            <Bookmark className="w-4.5 h-4.5" fill={isSaved ? 'currentColor' : 'none'} />
+          </button>
+        )}
       </div>
 
-      {/* Badge + Save */}
-      <div className="flex items-center justify-between">
-        <span className={`badge ${badgeColor(opportunity.category)}`}>
-          {opportunity.category}
-        </span>
-        <button
-          onClick={() => isSaved ? onUnsave() : onSave()}
-          className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all"
-          style={{ background: isSaved ? 'var(--accent)' : 'var(--surface)', border: '1px solid var(--border)' }}
-        >
-          <Bookmark className="w-4 h-4" style={{ color: isSaved ? '#0a0a0f' : 'var(--fg-dim)', fill: isSaved ? '#0a0a0f' : 'none' }} />
-        </button>
-      </div>
-
-      {/* Title */}
-      <h3 className="font-bold text-[18px] leading-tight" style={{ color: 'var(--fg)' }}>
-        {opportunity.title}
-      </h3>
-
-      {/* Description */}
       <p className="text-[14px] leading-relaxed line-clamp-2" style={{ color: 'var(--fg-dim)' }}>
         {opportunity.description}
       </p>
 
-      {/* Meta */}
-      <div className="flex flex-wrap gap-3 text-[13px]" style={{ color: 'var(--muted)' }}>
-        <span className="flex items-center gap-1">
-          <MapPin className="w-3.5 h-3.5" />
-          {opportunity.format}
-        </span>
-        <span className="flex items-center gap-1">
-          <Users className="w-3.5 h-3.5" />
-          Grades {opportunity.grade_min}-{opportunity.grade_max}
-        </span>
-        {opportunity.deadline && (
-          <span className="flex items-center gap-1">
-            <Calendar className="w-3.5 h-3.5" />
-            {new Date(opportunity.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-          </span>
+      <div className="flex flex-col gap-2 text-[13px]" style={{ color: 'var(--muted)' }}>
+        <div className="flex items-center gap-2">
+          <Calendar className="w-3.5 h-3.5" />
+          <span>Deadline: {deadline}</span>
+        </div>
+        {opportunity.requirements && opportunity.requirements.length > 0 && (
+          <div className="flex items-start gap-2">
+            <Users className="w-3.5 h-3.5 mt-0.5" />
+            <span className="line-clamp-2">{opportunity.requirements.join(', ')}</span>
+          </div>
         )}
       </div>
 
-      {/* CTA */}
-      <div className="mt-auto pt-2">
-        <a
-          href={opportunity.link || '#'}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-[14px] font-semibold no-underline transition-all"
-          style={{ color: 'var(--accent)' }}
-          onMouseEnter={e => { e.currentTarget.style.color = '#e0c080'; }}
-          onMouseLeave={e => { e.currentTarget.style.color = 'var(--accent)'; }}
-        >
-          View Details →
-        </a>
-      </div>
+      <a
+        href={opportunity.link || '#'}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn-gold w-full justify-center mt-auto inline-flex items-center gap-2 no-underline"
+      >
+        Apply Now
+        <ExternalLink className="w-4 h-4" />
+      </a>
     </div>
   );
 }
