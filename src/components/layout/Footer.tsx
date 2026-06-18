@@ -1,3 +1,5 @@
+'use client';
+
 export default function Footer() {
   return (
     <footer className="border-t border-[var(--border)]" style={{ background: 'var(--bg-alt)' }}>
