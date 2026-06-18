@@ -13,101 +13,126 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <nav className="sticky top-0 z-40 w-full border-b border-gray-200 bg-white/80 backdrop-blur dark:border-gray-700 dark:bg-gray-900/80">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-        <Link href="/" className="text-xl font-bold text-blue-600 dark:text-blue-400">
-          Mentoria Hub
+    <>
+      <nav className="fixed top-0 left-0 right-0 z-[100] h-[60px] flex items-center justify-between px-6"
+        style={{
+          background: 'rgba(10,10,15,0.65)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: '1px solid var(--border)',
+        }}>
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2.5 no-underline">
+          <span className="font-display text-[26px] font-bold tracking-tight" style={{ color: 'var(--accent)' }}>M</span>
+          <span className="font-display text-[20px] font-bold tracking-tight" style={{ color: 'var(--fg)' }}>Mentoria</span>
         </Link>
 
-        <div className="hidden items-center gap-6 md:flex">
-          <Link href="/opportunities" className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">
-            Opportunities
-          </Link>
-          <Link href="/courses" className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">
-            Courses
-          </Link>
-          <Link href="/roadmap" className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">
-            Roadmap
-          </Link>
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center gap-1.5">
+          {[
+            { href: '/opportunities', label: 'Opportunities' },
+            { href: '/courses', label: 'Courses' },
+            { href: '/dashboard', label: 'Dashboard' },
+            { href: '/roadmap', label: 'Roadmap' },
+          ].map(link => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="px-4 py-2 rounded-[20px] text-sm font-medium no-underline transition-all"
+              style={{ color: 'var(--fg-dim)' }}
+              onMouseOver={e => { e.currentTarget.style.color = 'var(--fg)'; e.currentTarget.style.background = 'var(--surface)'; }}
+              onMouseOut={e => { e.currentTarget.style.color = 'var(--fg-dim)'; e.currentTarget.style.background = 'transparent'; }}
+            >
+              {link.label}
+            </Link>
+          ))}
           {isAdmin && (
-            <Link href="/admin" className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">
+            <Link href="/admin" className="px-4 py-2 rounded-[20px] text-sm font-medium no-underline" style={{ color: 'var(--fg-dim)' }}>
               Admin
             </Link>
           )}
+          <span className="w-[1px] h-5 mx-1.5" style={{ background: 'var(--border)' }} />
+          <ThemeToggle />
         </div>
 
-        <div className="flex items-center gap-4">
-          <ThemeToggle />
-          
+        {/* Actions */}
+        <div className="flex items-center gap-2">
           {isAuthenticated ? (
-            <div className="hidden items-center gap-4 md:flex">
-              <Link href="/dashboard" className="text-sm text-gray-700 hover:text-blue-600 dark:text-gray-300">
+            <div className="hidden md:flex items-center gap-3">
+              <Link href="/dashboard" className="text-sm font-medium no-underline" style={{ color: 'var(--fg-dim)' }}>
                 {user?.email}
               </Link>
               <button
                 onClick={() => signOut()}
-                className="rounded bg-gray-100 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                className="rounded-full px-4 py-2 text-sm font-medium transition-all cursor-pointer font-sans"
+                style={{ background: 'transparent', color: 'var(--fg)', border: '1px solid var(--border-strong)' }}
+                onMouseOver={e => { e.currentTarget.style.background = 'var(--surface)'; }}
+                onMouseOut={e => { e.currentTarget.style.background = 'transparent'; }}
               >
                 Logout
               </button>
             </div>
           ) : (
-            <div className="hidden gap-2 md:flex">
+            <div className="hidden md:flex items-center gap-2">
               <button
                 onClick={() => { setAuthMode('login'); setAuthModalOpen(true); }}
-                className="rounded bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+                className="rounded-full px-5 py-2 text-sm font-semibold transition-all cursor-pointer font-sans"
+                style={{ background: 'var(--accent)', color: '#0a0a0f', boxShadow: '0 0 40px var(--accent-glow)' }}
+                onMouseOver={e => { e.currentTarget.style.filter = 'brightness(1.15)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                onMouseOut={e => { e.currentTarget.style.filter = ''; e.currentTarget.style.transform = ''; }}
               >
                 Login
-              </button>
-              <button
-                onClick={() => { setAuthMode('register'); setAuthModalOpen(true); }}
-                className="rounded border border-blue-600 px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-              >
-                Register
               </button>
             </div>
           )}
 
-          {/* Mobile menu button */}
+          {/* Hamburger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex items-center md:hidden"
+            className="flex md:hidden flex-col gap-[5px] p-2 cursor-pointer bg-none border-none"
+            style={{ background: 'none', border: 'none' }}
+            aria-label="Menu"
           >
-            <svg className="h-6 w-6 text-gray-700 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              {mobileMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
+            <span className="block h-[2px] w-[22px] rounded" style={{ background: 'var(--fg)', transition: '0.3s', transform: mobileMenuOpen ? 'rotate(45deg) translateY(4px)' : '' }} />
+            <span className="block h-[2px] w-[22px] rounded" style={{ background: 'var(--fg)', transition: '0.3s', opacity: mobileMenuOpen ? 0 : 1 }} />
+            <span className="block h-[2px] w-[22px] rounded" style={{ background: 'var(--fg)', transition: '0.3s', transform: mobileMenuOpen ? 'rotate(-45deg) translateY(-4px)' : '' }} />
           </button>
         </div>
-      </div>
+      </nav>
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="border-t border-gray-200 bg-white px-4 py-4 dark:border-gray-700 dark:bg-gray-900 md:hidden">
-          <div className="flex flex-col gap-4">
-            <Link href="/opportunities" className="text-gray-700 dark:text-gray-300">Opportunities</Link>
-            <Link href="/courses" className="text-gray-700 dark:text-gray-300">Courses</Link>
-            <Link href="/roadmap" className="text-gray-700 dark:text-gray-300">Roadmap</Link>
-            {isAdmin && <Link href="/admin" className="text-gray-700 dark:text-gray-300">Admin</Link>}
-            {isAuthenticated ? (
-              <>
-                <Link href="/dashboard" className="text-gray-700 dark:text-gray-300">Dashboard</Link>
-                <button onClick={() => signOut()} className="text-left text-gray-700 dark:text-gray-300">Logout</button>
-              </>
-            ) : (
-              <>
-                <button onClick={() => { setAuthMode('login'); setAuthModalOpen(true); }} className="text-left text-blue-600">Login</button>
-                <button onClick={() => { setAuthMode('register'); setAuthModalOpen(true); }} className="text-left text-blue-600">Register</button>
-              </>
-            )}
-          </div>
+        <div className="fixed inset-0 z-[105] flex flex-col items-center justify-center gap-6" style={{ background: 'var(--bg)' }}>
+          {[
+            { href: '/opportunities', label: 'Opportunities' },
+            { href: '/courses', label: 'Courses' },
+            { href: '/dashboard', label: 'Dashboard' },
+            { href: '/roadmap', label: 'Roadmap' },
+          ].map(link => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-[22px] font-medium no-underline transition-all"
+              style={{ color: 'var(--fg-dim)' }}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {link.label}
+            </Link>
+          ))}
+          {isAdmin && <Link href="/admin" className="text-[22px] font-medium no-underline" style={{ color: 'var(--fg-dim)' }} onClick={() => setMobileMenuOpen(false)}>Admin</Link>}
+          <span className="w-10 h-px my-2" style={{ background: 'var(--border)' }} />
+          {isAuthenticated ? (
+            <button onClick={() => { signOut(); setMobileMenuOpen(false); }} className="text-[22px] font-medium bg-none border-none cursor-pointer" style={{ color: 'var(--fg-dim)', background: 'none', border: 'none' }}>Logout</button>
+          ) : (
+            <>
+              <button onClick={() => { setAuthMode('login'); setAuthModalOpen(true); setMobileMenuOpen(false); }} className="text-[22px] font-medium bg-none border-none cursor-pointer" style={{ color: 'var(--fg-dim)', background: 'none', border: 'none' }}>Login</button>
+              <button onClick={() => { setAuthMode('register'); setAuthModalOpen(true); setMobileMenuOpen(false); }} className="text-[22px] font-medium bg-none border-none cursor-pointer" style={{ color: 'var(--fg-dim)', background: 'none', border: 'none' }}>Register</button>
+            </>
+          )}
         </div>
       )}
 
       <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} mode={authMode} />
-    </nav>
+    </>
   );
 }

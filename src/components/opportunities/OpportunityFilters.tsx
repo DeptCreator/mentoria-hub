@@ -1,6 +1,6 @@
 'use client';
 
-import { CATEGORIES, FORMATS, GRADES } from '@/lib/constants';
+import { CATEGORIES, FORMATS } from '@/lib/constants';
 
 interface Props {
   filters: any;
@@ -8,60 +8,72 @@ interface Props {
 }
 
 export default function OpportunityFilters({ filters, onChange }: Props) {
+  const pills = [
+    { label: 'All', value: 'all' },
+    { label: '9', value: '9' },
+    { label: '10', value: '10' },
+    { label: '11', value: '11' },
+  ];
+
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
-      <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Filters</h3>
-      
-      <div className="space-y-4">
-        <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Category</label>
-          <select
-            value={filters.category || ''}
-            onChange={(e) => onChange({ ...filters, category: e.target.value || undefined })}
-            className="w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-          >
-            <option value="">All Categories</option>
-            {CATEGORIES.map(cat => (
-              <option key={cat} value={cat}>{cat}</option>
-            ))}
-          </select>
-        </div>
+    <aside className="sidebar rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] p-6 h-fit sticky top-[88px]">
+      <h4 className="text-[14px] font-bold uppercase tracking-wider text-[var(--fg-muted)] mb-4">
+        Filters
+      </h4>
 
-        <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Format</label>
-          <select
-            value={filters.format || ''}
-            onChange={(e) => onChange({ ...filters, format: e.target.value || undefined })}
-            className="w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-          >
-            <option value="">All Formats</option>
-            {FORMATS.map(fmt => (
-              <option key={fmt} value={fmt}>{fmt.charAt(0).toUpperCase() + fmt.slice(1)}</option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Grade</label>
-          <select
-            value={filters.grade || ''}
-            onChange={(e) => onChange({ ...filters, grade: e.target.value ? parseInt(e.target.value) : undefined })}
-            className="w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-          >
-            <option value="">All Grades</option>
-            {GRADES.map(g => (
-              <option key={g} value={g}>Grade {g}</option>
-            ))}
-          </select>
-        </div>
-
-        <button
-          onClick={() => onChange({})}
-          className="w-full rounded border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+      <div className="filter-group mb-5">
+        <label className="block text-[13px] font-semibold text-[var(--fg-secondary)] mb-1.5">Category</label>
+        <select
+          value={filters.category || 'all'}
+          onChange={(e) => onChange({ ...filters, category: e.target.value === 'all' ? undefined : e.target.value })}
+          className="w-full rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-[14px] text-[var(--fg)]"
         >
-          Clear Filters
-        </button>
+          <option value="all">All</option>
+          {CATEGORIES.map(cat => (
+            <option key={cat} value={cat}>{cat}</option>
+          ))}
+        </select>
       </div>
-    </div>
+
+      <div className="filter-group mb-5">
+        <label className="block text-[13px] font-semibold text-[var(--fg-secondary)] mb-1.5">Grade</label>
+        <div className="flex flex-wrap gap-1.5">
+          {pills.map(p => (
+            <button
+              key={p.value}
+              onClick={() => onChange({ ...filters, grade: p.value === 'all' ? undefined : parseInt(p.value) })}
+              className={`filter-pill rounded-[var(--radius-full)] px-3 py-1.5 text-[12px] font-medium border transition-all cursor-pointer ${
+                (p.value === 'all' && !filters.grade) || filters.grade === parseInt(p.value)
+                  ? 'bg-[var(--primary)] text-white border-[var(--primary)]'
+                  : 'border-[var(--border)] bg-[var(--bg)] text-[var(--fg-secondary)] hover:border-[var(--primary)] hover:text-[var(--primary)]'
+              }`}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="filter-group mb-5">
+        <label className="block text-[13px] font-semibold text-[var(--fg-secondary)] mb-1.5">Format</label>
+        <select
+          value={filters.format || 'all'}
+          onChange={(e) => onChange({ ...filters, format: e.target.value === 'all' ? undefined : e.target.value })}
+          className="w-full rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-[14px] text-[var(--fg)]"
+        >
+          <option value="all">All</option>
+          {FORMATS.map(fmt => (
+            <option key={fmt} value={fmt}>{fmt.charAt(0).toUpperCase() + fmt.slice(1)}</option>
+          ))}
+        </select>
+      </div>
+
+      <button
+        onClick={() => onChange({})}
+        className="w-full rounded-[var(--radius-sm)] border border-[var(--border)] bg-transparent px-4 py-2 text-[13px] font-medium text-[var(--fg)] transition-all hover:bg-[var(--surface-hover)]"
+      >
+        Reset Filters
+      </button>
+    </aside>
   );
 }

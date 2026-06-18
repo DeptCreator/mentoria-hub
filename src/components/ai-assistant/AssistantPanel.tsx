@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { Send, Mic, MicOff, X, Volume2 } from 'lucide-react';
 import { ChatMessage } from '@/types';
 
 interface Props {
@@ -11,25 +10,19 @@ interface Props {
 }
 
 export default function AssistantPanel({ isOpen, onClose }: Props) {
-  const { user, profile } = useAuth();
+  const { profile } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'assistant', content: "Hello! I'm Jarvis, your AI assistant. How can I help?", timestamp: Date.now() }
+    { role: 'assistant', content: "Hello! I'm Jarvis, your AI assistant. Ask me anything about courses, opportunities, or your learning path.", timestamp: Date.now() }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  useEffect(() => { scrollToBottom(); }, [messages]);
 
   const sendMessage = async (text: string) => {
     if (!text.trim()) return;
@@ -56,36 +49,10 @@ export default function AssistantPanel({ isOpen, onClose }: Props) {
         timestamp: Date.now(),
       };
       setMessages(prev => [...prev, assistantMessage]);
-
-      // Auto-speak response
-      speakText(assistantMessage.content);
     } catch (error) {
       console.error('Chat error:', error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const speakText = async (text: string) => {
-    try {
-      setIsSpeaking(true);
-      const response = await fetch('/api/text-to-speech', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text }),
-      });
-
-      const data = await response.json();
-      if (data.audio) {
-        const audio = new Audio(`data:audio/mp3;base64,${data.audio}`);
-        audio.onended = () => setIsSpeaking(false);
-        await audio.play();
-      } else {
-        setIsSpeaking(false);
-      }
-    } catch (error) {
-      console.error('TTS error:', error);
-      setIsSpeaking(false);
     }
   };
 
@@ -97,14 +64,24 @@ export default function AssistantPanel({ isOpen, onClose }: Props) {
       audioChunksRef.current = [];
 
       mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunksRef.current.push(event.data);
-        }
+        if (event.data.size > 0) audioChunksRef.current.push(event.data);
       };
 
       mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-        await transcribeAudio(audioBlob);
+        const formData = new FormData();
+        formData.append('audio', audioBlob, 'recording.webm');
+
+        try {
+          setLoading(true);
+          const response = await fetch('/api/speech-to-text', { method: 'POST', body: formData });
+          const data = await response.json();
+          if (data.text) sendMessage(data.text);
+        } catch (err) {
+          console.error('Transcription error:', err);
+        } finally {
+          setLoading(false);
+        }
         stream.getTracks().forEach(track => track.stop());
       };
 
@@ -121,98 +98,77 @@ export default function AssistantPanel({ isOpen, onClose }: Props) {
     setIsRecording(false);
   };
 
-  const transcribeAudio = async (audioBlob: Blob) => {
-    try {
-      setLoading(true);
-      const formData = new FormData();
-      formData.append('audio', audioBlob, 'recording.webm');
-
-      const response = await fetch('/api/speech-to-text', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const data = await response.json();
-      if (data.text) {
-        sendMessage(data.text);
-      }
-    } catch (error) {
-      console.error('Transcription error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-24 right-6 z-50 flex h-[500px] w-[380px] flex-col rounded-xl border border-gray-200 bg-white shadow-2xl dark:border-gray-700 dark:bg-gray-800">
+    <div className="chat-panel fixed bottom-[100px] right-7 z-[199] flex flex-col overflow-hidden"
+      style={{
+        width: '380px',
+        maxWidth: 'calc(100vw - 40px)',
+        height: '480px',
+        maxHeight: 'calc(100vh - 140px)',
+        background: 'var(--bg-alt)',
+        border: '1px solid var(--border-strong)',
+        borderRadius: 'var(--radius-lg)',
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
+      }}>
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-gray-700">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600">
-            <Mic className="h-4 w-4 text-white" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-gray-900 dark:text-white">Jarvis</h3>
-            <p className="text-xs text-gray-500">
-              {isRecording ? 'Listening...' : isSpeaking ? 'Speaking...' : 'AI Assistant'}
-            </p>
-          </div>
-        </div>
-        <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-          <X className="h-5 w-5" />
-        </button>
+      <div className="flex items-center justify-between px-[18px] py-[14px]" style={{ borderBottom: '1px solid var(--border)' }}>
+        <span className="font-bold" style={{ color: 'var(--fg)' }}>Jarvis AI</span>
+        <button onClick={onClose} className="bg-none border-none cursor-pointer text-[18px]" style={{ color: 'var(--fg)', background: 'none', border: 'none' }}>✕</button>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2.5" id="chatMessages">
         {messages.map((msg, i) => (
-          <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[80%] rounded-lg px-3 py-2 ${
-              msg.role === 'user'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-white'
-            }`}>
-              <p className="text-sm">{msg.content}</p>
-            </div>
+          <div key={i} className={`chat-bubble max-w-[80%] px-4 py-2.5 text-[14px] leading-relaxed ${
+            msg.role === 'user' ? 'self-end' : 'self-start'
+          }`}
+            style={{
+              borderRadius: '18px',
+              ...(msg.role === 'user'
+                ? { background: 'var(--accent)', color: '#0a0a0f', borderBottomRightRadius: '4px' }
+                : { background: 'var(--surface)', color: 'var(--fg)', borderBottomLeftRadius: '4px' }
+              ),
+            }}>
+            {msg.content}
           </div>
         ))}
         {loading && (
-          <div className="flex justify-start">
-            <div className="rounded-lg bg-gray-100 px-3 py-2 dark:bg-gray-700">
-              <p className="text-sm text-gray-500">Thinking...</p>
-            </div>
+          <div className="chat-bubble self-start px-4 py-2.5 text-[14px]" style={{ background: 'var(--surface)', color: 'var(--fg-dim)', borderRadius: '18px', borderBottomLeftRadius: '4px' }}>
+            Thinking...
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
 
       {/* Input */}
-      <div className="border-t border-gray-200 p-4 dark:border-gray-700">
-        <div className="flex items-center gap-2">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && sendMessage(input)}
-            placeholder="Type a message..."
-            className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-          />
-          <button
-            onClick={() => sendMessage(input)}
-            disabled={!input.trim() || loading}
-            className="rounded-lg bg-blue-600 p-2 text-white hover:bg-blue-700 disabled:opacity-50"
-          >
-            <Send className="h-4 w-4" />
-          </button>
-          <button
-            onClick={isRecording ? stopRecording : startRecording}
-            className={`rounded-lg p-2 ${isRecording ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'}`}
-          >
-            {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-          </button>
-        </div>
+      <div className="flex gap-2 p-3" style={{ borderTop: '1px solid var(--border)' }}>
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && sendMessage(input)}
+          placeholder="Ask Jarvis..."
+          className="flex-1 rounded-full px-4 py-2.5 text-[14px] outline-none font-sans"
+          style={{ border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--fg)' }}
+        />
+        <button
+          onClick={isRecording ? stopRecording : startRecording}
+          className="w-10 h-10 rounded-full border-none cursor-pointer flex items-center justify-center flex-shrink-0 text-[16px] transition-all"
+          style={{ background: isRecording ? '#dc7864' : 'var(--accent)', color: '#0a0a0f' }}
+        >
+          {isRecording ? '■' : '🎤'}
+        </button>
+        <button
+          onClick={() => sendMessage(input)}
+          disabled={!input.trim() || loading}
+          className="w-10 h-10 rounded-full border-none cursor-pointer flex items-center justify-center flex-shrink-0 transition-all disabled:opacity-40"
+          style={{ background: 'var(--accent)', color: '#0a0a0f' }}
+        >
+          ▶
+        </button>
       </div>
     </div>
   );

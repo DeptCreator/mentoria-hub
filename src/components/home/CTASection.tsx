@@ -1,23 +1,42 @@
 'use client';
 
-import Link from 'next/link';
-
 export default function CTASection() {
   return (
-    <section className="bg-blue-600 py-20 dark:bg-blue-800">
-      <div className="mx-auto max-w-4xl px-4 text-center">
-        <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl">
+    <section className="px-6 py-[60px] pb-[100px]" style={{ background: 'var(--bg)' }}>
+      <div className="glass glass-xl max-w-[600px] mx-auto p-10 text-center">
+        <h3 className="font-display text-[2rem] font-bold mb-2" style={{ color: 'var(--fg)' }}>
           Join Mentoria
-        </h2>
-        <p className="mb-8 text-lg text-blue-100">
-          Create a profile and get personalized recommendations today
+        </h3>
+        <p className="mb-6" style={{ color: 'var(--fg-dim)' }}>
+          Get personalized recommendations straight to your inbox.
         </p>
-        <Link
-          href="/onboarding"
-          className="inline-block rounded-full bg-white px-8 py-4 text-lg font-semibold text-blue-600 shadow-lg transition hover:bg-gray-100"
-        >
-          Start for Free
-        </Link>
+        <form onSubmit={(e) => { e.preventDefault(); alert('Welcome to Mentoria! 🎉'); }}
+          className="flex gap-2.5 flex-wrap justify-center">
+          <input
+            type="email"
+            placeholder="your@email.com"
+            required
+            className="flex-1 min-w-[200px] rounded-full px-5 py-3 text-[15px] outline-none font-sans"
+            style={{
+              border: '1.5px solid var(--border-strong)',
+              background: 'var(--surface)',
+              color: 'var(--fg)',
+            }}
+          />
+          <button
+            type="submit"
+            className="rounded-full px-7 py-3 text-[15px] font-semibold transition-all cursor-pointer font-sans"
+            style={{
+              background: 'var(--accent)',
+              color: '#0a0a0f',
+              boxShadow: '0 0 40px var(--accent-glow)',
+            }}
+            onMouseOver={e => { e.currentTarget.style.filter = 'brightness(1.15)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+            onMouseOut={e => { e.currentTarget.style.filter = ''; e.currentTarget.style.transform = ''; }}
+          >
+            Subscribe
+          </button>
+        </form>
       </div>
     </section>
   );

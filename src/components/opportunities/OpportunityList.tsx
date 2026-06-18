@@ -26,33 +26,33 @@ export default function OpportunityList() {
     fetchOpportunities(newFilters);
   };
 
-  if (loading) return <div className="py-10 text-center">Loading opportunities...</div>;
-  if (error) return <div className="py-10 text-center text-red-600">Error: {error}</div>;
+  if (loading) return <div className="py-20 text-center text-[var(--fg-muted)]">Loading opportunities...</div>;
+  if (error) return <div className="py-20 text-center text-[var(--danger)]">Error: {error}</div>;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
-      <h1 className="mb-8 text-3xl font-bold text-gray-900 dark:text-white">Educational Opportunities</h1>
-      
-      <div className="grid gap-8 lg:grid-cols-4">
-        <div className="lg:col-span-1">
+    <div className="container-page">
+      <div className="grid grid-cols-[260px_1fr] gap-8 py-10 max-lg:grid-cols-1">
+        <div className="max-lg:static">
           <OpportunityFilters filters={filters} onChange={handleFilterChange} />
         </div>
-        
-        <div className="lg:col-span-3">
-          <div className="grid gap-6 md:grid-cols-2">
-            {opportunities.map((opportunity) => (
-              <OpportunityCard
-                key={opportunity.id}
-                opportunity={opportunity}
-                isSaved={isSaved(opportunity.id)}
-                onSave={() => handleSave(opportunity.id)}
-                onUnsave={() => handleUnsave(opportunity.id)}
-              />
-            ))}
-          </div>
-          
+
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-5 content-start">
+          {opportunities.map((opportunity) => (
+            <OpportunityCard
+              key={opportunity.id}
+              opportunity={opportunity}
+              isSaved={isSaved(opportunity.id)}
+              onSave={() => handleSave(opportunity.id)}
+              onUnsave={() => handleUnsave(opportunity.id)}
+            />
+          ))}
+
           {opportunities.length === 0 && (
-            <p className="text-center text-gray-500 dark:text-gray-400">No opportunities found matching your filters.</p>
+            <div className="col-span-full text-center py-20 text-[var(--fg-muted)]">
+              <div className="text-[48px] mb-4">🔍</div>
+              <h3 className="text-[20px] text-[var(--fg-secondary)] mb-2">No opportunities found</h3>
+              <p className="text-[14px]">Try adjusting your filters.</p>
+            </div>
           )}
         </div>
       </div>
